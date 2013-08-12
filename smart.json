@@ -1,12 +1,8 @@
 {
     "name": "jeizinen",
-    "description": "jeizinen is a UI prototyping framework, do not use for production",
+    "description": "jeizinen is a UI prototyping framework, do not use for production, optimized for bootstrap 3",
     "homepage": "",
     "author": "Roland Studer (http://rstuder.ch)",
     "version": "0.0.1",
-    "git": "", 
-    "packages": {
-        "router": ""
-    }
-
+    "git": ""
 }

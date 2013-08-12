@@ -8,3 +8,5 @@ The vision is to create a very fast prototyping framework, to create interactive
 In the long run, the idea is to support easily editable mock-data.
 
 Technically it is a meteorite package for meteor.
+
+Docs: http://rolandstuder.github.io/jeizinen-meteor
