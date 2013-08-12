@@ -1,1 +1,11 @@
 body, h1, h2, h3, h4, h5, h6, th, td { font-family: 'Muli', sans-serif; }
+
+.container {
+	margin-bottom: 50px;
+}
+
+h2 {
+	margin-top: 1em;
+	padding-top: 1em;
+	border-top: 1px solid #ddd;
+}
