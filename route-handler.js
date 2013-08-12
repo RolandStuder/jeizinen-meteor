@@ -2,13 +2,7 @@
 Meteor.Router.add({
   '': 'index',
   '*': function() {
-  	return this.pathname.slice(1,this.pathname.length);
+  	page = this.pathname.slice(1,this.pathname.length); // cut of leading '/'
+  	return Template[page] ? page : 'not_found'
   }
 });
-
-// if (Meteor.isClient) { console.log("yes")};
-
-
-// if (Meteor.Router) {
-// 	console.log("yes");
-// } else { console.log("no");}
