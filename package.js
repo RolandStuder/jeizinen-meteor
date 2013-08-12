@@ -5,8 +5,10 @@ Package.describe({
 Package.on_use(function (api, where) {
 	api.use('jquery', 'client');
 	api.use('router', 'client');
-	api.use('templating', ['client', 'server'])
+	api.use('templating', ['client', 'server']);
 
     api.add_files(['route-handler.js', 'route_templates.html'], 'client');
+    api.add_files(['view-helpers.js'], 'client');
+    api.add_files(['mock-data-helpers.js'], 'client');
 });
 

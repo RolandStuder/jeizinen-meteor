@@ -3,7 +3,6 @@ Meteor.Router.add({
   	path = this.pathname.slice(1,this.pathname.length); // cut of leading '/'
     sections = path.split(".")
     page = sections[sections.length-1]
-    page = page || 'index';
     page = Template[page] ? page : "notFound";
     Session.set('currentPage', page);
     Session.set('currentSections', sections)
@@ -25,19 +24,11 @@ addActiveClassToLinks = function() {
   $(".nav > li").removeClass("active");
   $("a").removeClass("active").each(function() {
     hrefParts = $(this).attr("href").split(".");
-    if (hasMatchingElements(hrefParts,Session.get('currentSections'))) {
+    targetPage = hrefParts[hrefParts.length-1];
+    Session.get('currentSections')
+    if ($.inArray(targetPage,Session.get('currentSections'))>=0 ) {
       $(this).addClass("active");
       $(this).parents(".nav > li").addClass("active");
     }
   });
-}
-
-hasMatchingElements = function(array1, array2) { // return true, if they arrays share one element
-  for (var i=0;i<array1.length;i++) {
-    if ($.inArray(array1[i],array2)>=0 ){
-      console.log("hit");
-      return true
-    };
-  };
-  return false
 }
