@@ -31,7 +31,7 @@ A template looks like this
 
 Now just start creating templates and link to them with regular links. You can nest templates within templates by using `{{> anyTemplateName }}`.
 
-This way you can easily create multiple pages and componetens like navigation bars...
+This way you can easily create multiple pages and components like navigation bars...
 
 ### Automatically get .active on links
 
@@ -54,7 +54,7 @@ In any view, use the `{{random "dataType"}}` helper to create mockdata.
 
 Please tell [me](mailto:roland.studer@gmail.com) what other dataTypes you need.
 
-### ´pickOne´ helper
+### Custom MockData with `pickOne` helper
 
 To use custom Mockdata you can just use the ´pickOne´ helper and pass it a list of comma-separated values.
 
@@ -63,7 +63,7 @@ To use custom Mockdata you can just use the ´pickOne´ helper and pass it a lis
 
 ## Create lists easily with the `repeat` helper
 
-You can wrap any content with a repeater, to create lists, just pass an integer and let it the block be repeated. No here it starts to get interesting as you can combine mockdata with the repeater (every block will contain different mock-data)
+You can wrap any content with a repeater, to create lists, just pass an integer and let it the block be repeated. Now here it starts to get interesting as you can combine mockdata with the repeater (every block will contain different mock-data)
 
 	{{#repeat 10}}
 		<div>
@@ -72,7 +72,11 @@ You can wrap any content with a repeater, to create lists, just pass an integer 
 		</div>
 	{{/repeat}}
 
+## add placeholder images from flickr
 
+	<img src="flickr://beautiful portrait">
+
+If you use image-tags indicating a source with the custom URL 'flickr://' then everthing after '//' will be used to query flickr for an image and put that picture right there.
 
 
 ## To get started...
