@@ -1,3 +1,4 @@
+
 Meteor.Router.add({
   '*': function() {
   	path = this.pathname.slice(1,this.pathname.length); // cut of leading '/'
@@ -36,39 +37,60 @@ addActiveClassToLinks = function() {
 }
 
 var replaceImagePlaceholders = function() {
-  replacePlaceholders = function() {
-      var flickrAPIkey = '1a02addb94c985970bca4339af022b01';
 
-      $.ajax({
-        url: "http://ycpi.api.flickr.com/services/rest/",
-        data: { 
-          api_key: flickrAPIkey,
-          format: 'json',
-          method: 'flickr.photos.search',
+
+  addImagesToPool = function(query){
+    var flickrAPIkey = '1a02addb94c985970bca4339af022b01';
+
+    var addToPool = function(query, response) {
+      PlaceholderImages.insert({query: query, photos: response});
+      console.log(query + " added to image pool");
+    }
+    // PlaceholderImages.insert({query: query });
+    $.ajax({
+      url: "http://ycpi.api.flickr.com/services/rest/",
+      data: { 
+        api_key: flickrAPIkey,
+        format: 'json',
+        method: 'flickr.photos.search',
           license: 4, // CC attribution license
-          text: 'color',
-          safe_search: 3
+          text: query,
+          safe_search: 3,
+          sort: "relevance"
         },
         dataType: 'jsonp',
         jsonp: 'jsoncallback',
         success: function(response) {
-          replaceNow(response.photos.photo);
+          addToPool(query, response.photos.photo);
         }
       });
+  }
+  
+  replacePlaceholders = function() {
+    placeholders = $("img[src^='flickr://']");
+    queries = [];
 
-      replaceNow = function(photoArray) {
-        $("img[src^='flickr://']").each(function(index){
-          currentPhoto = photoArray[index];
-          photoURL = "http://farm" + currentPhoto.farm + ".staticflickr.com/" + currentPhoto.server + "/" + currentPhoto.id + "_" + currentPhoto.secret + ".jpg";
-          // http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
-          $(this).attr('src', photoURL);
-          Session.set('photos', photoArray);
-        });
-      }
+    placeholders.each(function(){
+      query = $(this).attr('src').replace('flickr://','');
+      if ($.inArray(query,queries)===-1) { queries.push(query)}
+    })
+    
+    console.log("unique queries: "  + queries);
+
+    $(queries).each(function(index, value) {
+      if( !PlaceholderImages.findOne({query: value}) ) { addImagesToPool(value); }  
+    });
+
+    $(placeholders).each(function(index){
+      query = $(this).attr('src').replace('flickr://','');
+      currentPhoto = PlaceholderImages.findOne({query:query}).photos[index];
+      photoURL = "http://farm" + currentPhoto.farm + ".staticflickr.com/" + currentPhoto.server + "/" + currentPhoto.id + "_" + currentPhoto.secret + ".jpg";
+      $(this).attr('src', photoURL);
+    })
+
   }
 
   if ($("img[src^='flickr://']").length) replacePlaceholders();
-
 
 }
 
