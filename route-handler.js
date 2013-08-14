@@ -45,6 +45,7 @@ var replaceImagePlaceholders = function() {
     var addToPool = function(query, response) {
       PlaceholderImages.insert({query: query, photos: response});
       console.log(query + " added to image pool");
+      replaceNow();
     }
     // PlaceholderImages.insert({query: query });
     $.ajax({
@@ -81,12 +82,22 @@ var replaceImagePlaceholders = function() {
       if( !PlaceholderImages.findOne({query: value}) ) { addImagesToPool(value); }  
     });
 
-    $(placeholders).each(function(index){
-      query = $(this).attr('src').replace('flickr://','');
-      currentPhoto = PlaceholderImages.findOne({query:query}).photos[index];
-      photoURL = "http://farm" + currentPhoto.farm + ".staticflickr.com/" + currentPhoto.server + "/" + currentPhoto.id + "_" + currentPhoto.secret + ".jpg";
-      $(this).attr('src', photoURL);
-    })
+    replaceNow = function() { 
+      queryCounter = {};
+      $(placeholders).each(function(index){
+        query = $(this).attr('src').replace('flickr://','');
+        if ( queryCounter[query]!== undefined ) {
+          queryCounter[query]=queryCounter[query]+1;
+        } else {
+          queryCounter[query]=0;
+        }
+        currentPhoto = PlaceholderImages.findOne({query:query}).photos[queryCounter[query]];
+        photoURL = "http://farm" + currentPhoto.farm + ".staticflickr.com/" + currentPhoto.server + "/" + currentPhoto.id + "_" + currentPhoto.secret + ".jpg";
+        $(this).attr('src', photoURL);
+      }) 
+    };
+
+    replaceNow();
 
   }
 
