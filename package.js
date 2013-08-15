@@ -12,6 +12,7 @@ Package.on_use(function (api, where) {
     api.add_files(['server.js'], 'server');
     api.add_files(['server-and-client.js'], both);
     api.add_files(['view-helpers.js'], 'client');
+    api.add_files(['placeholder-images.js'], 'client');
     api.add_files(['mock-data-helpers.js'], 'client');
 });
 
