@@ -12,12 +12,15 @@ Package.on_use(function (api, where) {
     api.use('backbone', both);
     api.use('mongo-livedata', both)
 
-    api.add_files(['client/router.js', 'client/route_templates.html'], ['client']);
-    api.add_files(['server/server.js'], 'server');
+    api.add_files([ // client files
+            'router.js',
+            'route_templates.html',
+            'placeholder-images.js',
+            'mock-data-helpers.js',
+            'view-helpers.js'
+        ], ['client']);
+    api.add_files(['server.js'], 'server');
     api.add_files(['server-and-client.js'], both);
-    api.add_files(['client/view-helpers.js'], 'client');
-    api.add_files(['client/placeholder-images.js'], 'client');
-    api.add_files(['client/mock-data-helpers.js'], 'client');
 
 });
 
