@@ -13,7 +13,8 @@ random = function random (dataType, options) {
 	} else if (dataType == "phoneNumber") {
 		return getPhoneNumber();
 	} else {
-		return "not a valid datType for random-helper";
+		throw new Meteor.Error(500, "jeizinen:: unknown dataType for random-helper, check http://rolandstuder.github.io/jeizinen-meteor/#mockdata for valid dataTypes");
+		return "nothing here"
 	}
 };
 

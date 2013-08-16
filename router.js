@@ -12,7 +12,7 @@ Meteor.Router.add({
       path = slicedPath[0];
       Session.set('currentLayout', '');
     }
-    
+
     sections = path.split(".");
     page = sections[sections.length-1]
     page = Template[page] ? page : "notFound";

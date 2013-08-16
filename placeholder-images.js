@@ -27,11 +27,12 @@ replaceImagePlaceholders = function() {
   }
   
   replacePlaceholders = function() {
-    placeholders = $("img[src^='flickr://']");
+    placeholders = $("img[search]");
+    console.log(placeholders);
     queries = [];
 
     placeholders.each(function(){
-      query = $(this).attr('src').replace('flickr://','');
+      query = $(this).attr('search');
       if ($.inArray(query,queries)===-1) { queries.push(query)}
     })
     
@@ -44,7 +45,7 @@ replaceImagePlaceholders = function() {
     replaceNow = function() { 
       queryCounter = {};
       $(placeholders).each(function(index){
-        query = $(this).attr('src').replace('flickr://','');
+        query = $(this).attr('search');
         if ( queryCounter[query]!== undefined ) {
           queryCounter[query]=queryCounter[query]+1;
         } else {
@@ -60,6 +61,6 @@ replaceImagePlaceholders = function() {
 
   }
 
-  if ($("img[src^='flickr://']").length) replacePlaceholders();
+  if ($("img[search]").length) replacePlaceholders();
 
 }
