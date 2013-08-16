@@ -9,6 +9,7 @@ A javascript prototyping framework to quickly create UI prototypes.
 
 Jeiziner is a meteorite package for [Meteor.js](http://meteor.com).
 
+<a name="Pages &amp; Layout"> </a> 
 ## Pages and layout
 
 In one html-file you define the layout, for example you create a `_layout.html`
@@ -33,6 +34,21 @@ Now just start creating templates and link to them with regular links. You can n
 
 This way you can easily create multiple pages and components like navigation bars...
 
+### multiple layouts
+
+You can use multiple layouts:
+	
+In your main `html` put {{> renderLayout}} instead of {{> renderPage }}. Then create a template that contains {{> renderPage}} like:
+	
+	<template name="layoutName">
+		... some navigation or stuff ...
+		{{> renderPage }}
+	</template>
+
+Now you can navigate to page like `/layoutName/pageName` and the template (pageName) will be surrounded by the layout (layoutName).
+
+Note: You cannot render a layout without template.
+
 ### Automatically get .active on links
 
 All links to the current page, get the css class `.active`, also links within Bootstrap navigation elements are automatically set to `.active`.
@@ -43,7 +59,8 @@ You can also selectively activate links by pointing your links as follows
 
 When going to /documents.someTemplate `someTemplate` will be rendered and links pointing to `someTemplate` and links pointing to `documents` will get the .active class.
 
-## Use Mockdata - the `random` helper
+<a name="Mockdata"> </a> 
+## Use Mockdata - the `random` helpers
 
 In any view, use the `{{random "dataType"}}` helper to create mockdata.
 
@@ -61,6 +78,7 @@ To use custom Mockdata you can just use the ´pickOne´ helper and pass it a lis
 	{{ pickOne "male,female"}}
 
 
+<a name="Repeater"> </a> 		
 ## Create lists easily with the `repeat` helper
 
 You can wrap any content with a repeater, to create lists, just pass an integer and let it the block be repeated. Now here it starts to get interesting as you can combine mockdata with the repeater (every block will contain different mock-data)
@@ -72,13 +90,14 @@ You can wrap any content with a repeater, to create lists, just pass an integer 
 		</div>
 	{{/repeat}}
 
+<a name="Image Placeholders"> </a> 		
 ## add placeholder images from flickr
 
 	<img src="flickr://beautiful portrait">
 
 If you use image-tags indicating a source with the custom URL 'flickr://' then everthing after '//' will be used to query flickr for an image and put that picture right there.
 
-
+<a name="Get Started"> </a>
 ## To get started...
 
 - Install [Meteor.js](http://meteor.com)

@@ -4,18 +4,30 @@
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
 	<link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="css/global.css">
+	<script src="js/autoNavigation.js"></script>
 </head>
-<body>
+<body >
 	<div class="container">
-		<div class="row"><div class="col-12">
-		<h1>Jeizinen Prototyper <small>for meteor.js</small></h1>
+		<div class="row"><div class="col-lg-offset-4 col-lg-8">
+					<h1>Jeizinen Prototyper <small>for meteor.js</small></h1>
+				</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-4">
+				<div id="autoNavigation" data-spy="affix" data-offset-top="0">
+					<ul id="nav" class="nav nav-pill nav-stacked"></ul>
+				</div>
+			</div>
+			<div class="col-lg-8">
 
-		{{ content }}
+				<div data-autoNavigation>{{ content }}</div>
 
-	</div></div>
+			</div>
+		</div>
 	</div>
-
 </body>
 </html>
