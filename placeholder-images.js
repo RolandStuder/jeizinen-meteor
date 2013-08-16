@@ -28,7 +28,6 @@ replaceImagePlaceholders = function() {
   
   replacePlaceholders = function() {
     placeholders = $("img[search]");
-    console.log(placeholders);
     queries = [];
 
     placeholders.each(function(){
@@ -47,7 +46,7 @@ replaceImagePlaceholders = function() {
       $(placeholders).each(function(index){
         query = $(this).attr('search');
         if ( queryCounter[query]!== undefined ) {
-          queryCounter[query]=queryCounter[query]+1;
+          queryCounter[query]++;
         } else {
           queryCounter[query]=0;
         }
