@@ -93,7 +93,7 @@ You can wrap any content with a repeater, to create lists, just pass an integer 
 <a name="Image Placeholders"> </a> 		
 ## add placeholder images from flickr
 
-	<img src="flickr://beautiful portrait">
+	<img search="dolphins">
 
 If you use image-tags indicating a source with the custom URL 'flickr://' then everthing after '//' will be used to query flickr for an image and put that picture right there.
 
