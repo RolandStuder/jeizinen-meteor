@@ -24,7 +24,6 @@ random = {
 		return random.firstName + "." + random.familyName + "@" + random.pick('example,gmail,yahoo,bigcorp') + ".com";
 	},
 	pick: function(params) { // takes a comma separated string as argument
-		console.log(params)
 		return sample(params.split(","));
 	}, 
 	integer: function(lower_limit, upper_limit) {
