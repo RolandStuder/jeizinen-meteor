@@ -3,35 +3,34 @@
 var parse = function(path) {
   path = path.split('/')
   path.shift();
-
+  console.log(path);
   // now check which case applies layout or template....
   
   if (path.length > 2) { // too long, can't handle it...
-    template = 'notFound';
+    page = 'notFound';
     console.log('!path too long cannot handle it');
-
+  
+  } else if (path == '') {
+    page = 'index';
   } else if (path.length === 2 ) { 
     layout = path[0];
-    template = path[1];
+    page = path[1];
 
   } else if (path.length === 1 ) { // /template
-    template = path[0];
-
-  } else {
-    template = 'index';
-  }
-
-  if (!Template[template]) template = 'notFound';
+    page = path[0];
+  } 
+  
+  if (!Template[page]) page = 'notFound';
   if (!Template[layout]) layout = 'renderPage';
 
-  return {template: template, layout: layout};
+  return {page: page, layout: layout};
 }
 
 Meteor.Router.add({
   '*': function() {
     var path = parse(this.pathname);
 
-    Session.set('currentPage',path['template'])
+    Session.set('currentPage',path['page'])
     Session.set('currentLayout',path['layout'])
   }
   
@@ -52,8 +51,6 @@ Meteor.startup(function() {
     addActiveClassToLinks();
     replaceImagePlaceholders();
   }
- 
-  enableRemovalOfPlaceholders();
 });
 
 
