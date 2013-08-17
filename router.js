@@ -42,7 +42,11 @@ Meteor.startup(function() {
     replaceImagePlaceholders();
     addPrettify();
   }
+ 
+  enableRemovalOfPlaceholders();
+
 });
+
 
 addActiveClassToLinks = function() {
   $(".nav > li").removeClass("active");
