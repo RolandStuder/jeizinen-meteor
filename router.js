@@ -1,50 +1,59 @@
+// wildcard router takes path in the form of layoutname/context1.context2.templateName
+
+var parse = function(path) {
+  path = path.split('/')
+  path.shift();
+
+  // now check which case applies layout or template....
+  
+  if (path.length > 2) { // too long, can't handle it...
+    template = 'notFound';
+    console.log('!path too long cannot handle it');
+
+  } else if (path.length === 2 ) { 
+    layout = path[0];
+    template = path[1];
+
+  } else if (path.length === 1 ) { // /template
+    template = path[0];
+
+  } else {
+    template = 'index';
+  }
+
+  if (!Template[template]) template = 'notFound';
+  if (!Template[layout]) layout = 'renderPage';
+
+  return {template: template, layout: layout};
+}
 
 Meteor.Router.add({
   '*': function() {
-  	path = this.pathname.slice(1,this.pathname.length); // cut of leading '/'
-    slicedPath = path.split("/");
-    if (slicedPath.length === 2) {
-      layout = slicedPath[0];
-      Session.set('currentLayout', layout)
+    var path = parse(this.pathname);
 
-      path = slicedPath[1];
-    } else {
-      path = slicedPath[0];
-      Session.set('currentLayout', '');
-    }
-
-    sections = path.split(".");
-    page = sections[sections.length-1]
-    page = Template[page] ? page : "notFound";
-    Session.set('currentPage', page);
-    Session.set('currentSections', sections)
+    Session.set('currentPage',path['template'])
+    Session.set('currentLayout',path['layout'])
   }
   
 });
 
+// Jeizinen provides two empty templates that can render any layout/template
 
 Meteor.startup(function() {
   Template.renderLayout.content = function() {
-    if (Session.get('currentLayout')!=='') {
       return new Handlebars.SafeString(Template[Session.get('currentLayout')]());
-    } else {
-      return new Handlebars.SafeString(Template['renderPage']());
-    }
   }
 
   Template.renderPage.content = function() {
     return new Handlebars.SafeString(Template[Session.get('currentPage')]());
   }
 
-
   Template.renderPage.rendered = function() {
     addActiveClassToLinks();
     replaceImagePlaceholders();
-    addPrettify();
   }
  
   enableRemovalOfPlaceholders();
-
 });
 
 
@@ -60,11 +69,3 @@ addActiveClassToLinks = function() {
     }
   });
 }
-
-
-addPrettify = function() { // prettify script is loaded in _layout.html
-  $("pre").addClass("prettyprint");
-  $("code").addClass("prettyprint");
-};
-
-
