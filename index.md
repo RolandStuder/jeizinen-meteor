@@ -91,9 +91,9 @@ You can wrap any content with a repeater, to create lists, just pass an integer 
 <a name="Image Placeholders"> </a> 		
 ## add placeholder images from flickr
 
-	<img search="dolphins">
+	<img data-search="dolphins">
 
-Image tags with the attribute `search` will automatically point to a flickr image that fits the search string.
+Image tags with the attribute `data-search` will automatically point to a flickr image that fits the search string.
 
 If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
 
