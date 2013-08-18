@@ -97,6 +97,28 @@ Image tags with the attribute `search` will automatically point to a flickr imag
 
 If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
 
+<a name="Flash Messages"> </a> 		
+## Flash Messages
+
+If you include the `{{> flashMessages }}`-template somehwere you can display messages.
+Messages use the [bootstrap-3 alert-classes](http://getbootstrap.com/components/#alerts): just pass 'success', 'info' or 'danger' to style the message.
+
+#### via data attributes
+
+	<a href="..." data-flash-message="This is good!" data-flash-message-type="success">
+
+When you click on this link, it will show:
+
+<div class="alert alert-success">This is good!</div>
+
+#### via javascript
+
+	FlashMessages.send('type','message'); 		// display message on the next page
+	FlashMessages.display('type','messsage'); 	// display message immediately
+	FlashMessages.clear('type','messsage'); 	// remove displayed images
+
+You can pass any string to `message` (including html).
+
 <a name="Get Started"> </a>
 ## To get started...
 
@@ -116,6 +138,8 @@ If you a picture does not fit your need, alt-click on it, it will be replaced by
 		  	}
 		  }
 		}
+
+- Jeizinen Prototyper is optimized for use with [bootstrap-3](http://getbootstrap.com). So add the meteorite package: `mrt add bootstrap-3`
 
 
 It is not yet available over [atmosphere.meteor.com](http://atmosphere.meteor.com), if you want to use Jeizinen Prototyper [drop my a line](mailto:roland.studer@gmail.com) and I will publish it, so it can be more easily installed (via `mrt add jeizinen`). 
