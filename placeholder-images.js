@@ -109,11 +109,11 @@ var enableRemovalOfPlaceholders = function() {
 
 // delegated binding...
 
-$('body').on('click', 'img[search]', function(e){
-  if (e.altKey) {
-    remove(this);
-  }
-})
+  $('body').on('click', 'img[search]', function(e){
+    if (e.altKey) {
+      remove(this);
+    }
+  })
 }
 
 
@@ -125,7 +125,7 @@ Meteor.startup( function() {
   replaceImagePlaceholders = function() {
     if ($("img[search]").length) {
       if(!(PlaceholderImages.findOne())) {
-        waitForCollection = Meteor.setInterval(checkIfCollectionIsReady,1000)
+        waitForCollection = Meteor.setInterval(checkIfCollectionIsReady,100)
       } else {
         replacePlaceholders();
       }
