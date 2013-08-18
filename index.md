@@ -3,11 +3,12 @@ layout: default
 ---
 
 {%raw %}
-<div class="jumbotron">
+<div class="lead">
 A javascript prototyping framework to quickly create UI prototypes.
 </div>
+Jeiziner is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
 
-Jeiziner is a meteorite package for [Meteor.js](http://meteor.com).
+
 
 <a name="Pages &amp; Layout"> </a> 
 ## Pages and layout
@@ -64,21 +65,18 @@ When going to /documents.someTemplate `someTemplate` will be rendered and links 
 
 In any view, use the `{{random "dataType"}}` helper to create mockdata.
 
-	{{ random "name"}} -> gives you combination of a givenName and a familyName
-	{{ random "givenName"}} -> returns a givenName
-	{{ random "familyName"}} -> returns a familyName
-	{{ random "phoneNumber"}} -> returns a phoneNumber
+	{{ random "name"}} -> gives you combination of a first name  and a family name
+	
+	{{ random "firstName"}} 
+	{{ random "familyName"}} 
+	{{ random "phoneNumber"}}
+
+	{{ random "pick" "some,comma,separated,values"}} -> randomly picks one of the comma-separated values
 
 Please tell [me](mailto:roland.studer@gmail.com) what other dataTypes you need.
 
-### Custom MockData with `pickOne` helper
 
-To use custom Mockdata you can just use the ´pickOne´ helper and pass it a list of comma-separated values.
-
-	{{ pickOne "male,female"}}
-
-
-<a name="Repeater"> </a> 		
+<a name="Repeater"> </a> 	
 ## Create lists easily with the `repeat` helper
 
 You can wrap any content with a repeater, to create lists, just pass an integer and let it the block be repeated. Now here it starts to get interesting as you can combine mockdata with the repeater (every block will contain different mock-data)
@@ -95,7 +93,9 @@ You can wrap any content with a repeater, to create lists, just pass an integer 
 
 	<img search="dolphins">
 
-If you use image-tags indicating a source with the custom URL 'flickr://' then everthing after '//' will be used to query flickr for an image and put that picture right there.
+Image tags with the attribute `search` will automatically point to a flickr image that fits the search string.
+
+If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
 
 <a name="Get Started"> </a>
 ## To get started...

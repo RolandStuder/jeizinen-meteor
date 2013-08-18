@@ -6,10 +6,10 @@ body, h1, h2, h3, h4, h5, h6, th, td { font-family: 'Muli', sans-serif; }
 }
 
 h2 {
-	margin-top: 1em;
-	padding-top: 1em;
-	border-top: 1px solid #ddd;
-}
+	margin-top: 2em;
+	padding-top: 0.5em;
+/*	border-top: 1px solid #ddd;
+*/}
 
 a h2 {
 	color: black;
@@ -36,9 +36,11 @@ a.anchor-link:hover {
 		position: static;
 		width: auto;
 		top: 0;
+		margin: 20px 0px 20px 0px;
 	}
 }
 
-.affix {
-	overflow: auto;
+
+#autoNavigation ul li a {
+	padding: 3px;
 }

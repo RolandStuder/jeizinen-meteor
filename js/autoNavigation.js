@@ -1,4 +1,4 @@
-
+// anchors get added to the navigation, beware that markdown parsing is strange there needs to content in the anchor or it won't work...
 
 $(document).ready(function() {
 	anchors = $('a[name]');
@@ -9,15 +9,3 @@ $(document).ready(function() {
 	})
 
 });
-
-
-
-  // titles = $("[data-autoNavigation]").find("h2")
-  // var index = 0;
-  // list = $("#autoNavigation ul");
-  // titles.wrap('<a>').each(function(){
-  // 	index++;
-  // 	$(this).parents('a').attr('name',index).attr('id',index).addClass('anchor-link');
-  // 	var link = '<a href="#' + index + '">'+ $(this).text() +'</a>';
-  // 	$("#autoNavigation ul").append('<li />').find("li:last").append(link);
-  // })
