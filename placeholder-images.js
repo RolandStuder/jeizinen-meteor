@@ -52,7 +52,7 @@ var getFlickrImages = function(query) {
 var replaceNow = function() { 
   queryCounter = {};
   $(placeholders).each(function(index){
-    query = $(this).attr('search');
+    query = $(this).attr('data-search');
 
     var photos = PlaceholderImages.findOne({query:query}).photos
     
@@ -71,11 +71,11 @@ var replaceNow = function() {
 };
 
 var replacePlaceholders = function() {
-  placeholders = $("img[search]");
+  placeholders = $("img[data-search]");
   uniqueQueries = [];
 
   placeholders.each(function(){ // get unique queries
-    query = $(this).attr('search');
+    query = $(this).attr('data-search');
     if ($.inArray(query,uniqueQueries)===-1) { uniqueQueries.push(query)}
   })
 
@@ -95,7 +95,7 @@ var enableRemovalOfPlaceholders = function() {
 
   var remove = function(image) {
     image = $(image);
-    var query = image.attr('search');
+    var query = image.attr('data-search');
     var pool = PlaceholderImages.findOne({query:query});
     var photos = pool.photos;
     photos.splice(image.attr('placeholder-position'),1);
@@ -109,7 +109,7 @@ var enableRemovalOfPlaceholders = function() {
 
 // delegated binding...
 
-  $('body').on('click', 'img[search]', function(e){
+  $('body').on('click', 'img[data-search]', function(e){
     if (e.altKey) {
       remove(this);
     }
@@ -123,7 +123,7 @@ Meteor.startup( function() {
 
   // Main function is called when a template is rendered
   replaceImagePlaceholders = function() {
-    if ($("img[search]").length) {
+    if ($("img[data-search]").length) {
       if(!(PlaceholderImages.findOne())) {
         waitForCollection = Meteor.setInterval(checkIfCollectionIsReady,100)
       } else {
