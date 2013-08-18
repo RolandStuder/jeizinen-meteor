@@ -30,6 +30,9 @@ var parse = function(path) {
 Meteor.Router.add({
   '*': function() {
     var path = parse(this.pathname);
+    
+    FlashMessages.clear();
+    FlashMessages.load();
 
     Session.set('currentPage',path['page'])
     Session.set('currentLayout',path['layout'])

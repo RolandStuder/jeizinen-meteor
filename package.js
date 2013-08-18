@@ -23,6 +23,9 @@ Package.on_use(function (api, where) {
             'router.js'
         ], ['client']);
 
+    api.add_files(['flash-messages.js','flash-messages.html'], ['client'])
+
     api.export('PlaceholderImages');
+    api.export('FlashMessages');
 });
 
