@@ -3,7 +3,7 @@
 var parse = function(path) {
   path = path.split('/')
   path.shift();
-  console.log(path);
+
   // now check which case applies layout or template....
   
   if (path.length > 2) { // too long, can't handle it...
@@ -12,6 +12,7 @@ var parse = function(path) {
   
   } else if (path == '') {
     page = 'index';
+
   } else if (path.length === 2 ) { 
     layout = path[0];
     page = path[1];
