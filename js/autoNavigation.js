@@ -8,4 +8,6 @@ $(document).ready(function() {
 		$("#autoNavigation ul").append('<li />').find("li:last").append(link);
 	})
 
+	$('pre').add('code').addClass('prettyprint')
+
 });
