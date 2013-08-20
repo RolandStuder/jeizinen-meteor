@@ -2,9 +2,11 @@ FlashMessages = new Meteor.Collection(null);
 
 $.extend(FlashMessages,{
 	send: function(type, message){
+		if (type==='html') type = false;
 		return FlashMessages.insert({type: type, message: message, display: false});
 	},
 	display: function(type, message){
+		if (type==='html') type = false;
 		return FlashMessages.insert({type: type, message: message, display: true});
 	},
 	clear: function(){

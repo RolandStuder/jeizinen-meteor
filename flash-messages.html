@@ -1,5 +1,9 @@
 <template name="flashMessages">
 	{{#each messages}}
+	   {{#if type }}
 			<div class="alert alert-{{type}}">{{{message}}}</div>
+	   {{else}}
+	   	{{{message}}}
+	   {{/if }}
 	{{/each}}
 </template>
