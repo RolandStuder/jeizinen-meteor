@@ -4,7 +4,7 @@ Package.describe({
 
 Package.on_use(function (api, where) {
 	both = ['client', 'server'];
-	api.use('jquery', 'client');
+	api.use('jquery', both);
     api.use('router', 'client');
     api.use('underscore', both);
 	api.use('templating', both);
@@ -14,6 +14,7 @@ Package.on_use(function (api, where) {
     api.use('bootstrap-3', 'client');
 
     api.add_files(['server-and-client.js'], both);
+    api.add_files(['mockdata.js'],both)
     api.add_files(['server.js'], 'server');
     api.add_files([ // client files
             'placeholder-images.js',
@@ -27,5 +28,8 @@ Package.on_use(function (api, where) {
 
     api.export('PlaceholderImages');
     api.export('FlashMessages');
+    api.export('MockData');
+    api.export('Mock');
+
 });
 
