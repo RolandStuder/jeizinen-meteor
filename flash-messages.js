@@ -5,6 +5,7 @@ $.extend(FlashMessages,{
 		return FlashMessages.insert({type: type, message: message, display: false});
 	},
 	display: function(type, message){
+		FlashMessages.clear(); // only ever display one message, if not using 'send'
 		return FlashMessages.insert({type: type, message: message, display: true});
 	},
 	clear: function(){
