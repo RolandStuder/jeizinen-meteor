@@ -5,3 +5,7 @@ Handlebars.registerHelper('repeat', function(n, block) {
         accum += block.fn(i);
     return accum;
 });
+
+Handlebars.registerHelper('session',function(input){
+    return Session.get(input);
+});
