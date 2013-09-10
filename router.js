@@ -14,6 +14,7 @@ function getURLParameters() {
   return hash;
 }
 
+
 var parse = function(path) {
   path = path.split('/')
   path.shift();
@@ -29,16 +30,19 @@ var parse = function(path) {
 
   } else if (path.length === 2 ) { 
     layout = path[0];
-    page = path[1];
+    sections = path[1]
 
   } else if (path.length === 1 ) { // /template
-    page = path[0];
+    sections = path[0]
   } 
+
+  sections = sections.split('.');
+  page = sections[sections.length-1];
   
   if (!Template[page]) page = 'notFound';
   if (!Template[layout]) layout = 'renderPage';
 
-  return {page: page, layout: layout};
+  return {page: page, layout: layout, sections: sections};
 }
 
 Meteor.Router.add({
@@ -56,6 +60,7 @@ Meteor.Router.add({
 
     Session.set('currentPage',path['page'])
     Session.set('currentLayout',path['layout'])
+    Session.set('currentSections',path['sections'])
   }
   
 });
