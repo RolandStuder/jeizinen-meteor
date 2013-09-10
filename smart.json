@@ -6,5 +6,7 @@
     "version": "",
     "git": "",
     "packages": {
+    	"bootstrap-3": "",
+    	"router": ""
     }
 }
