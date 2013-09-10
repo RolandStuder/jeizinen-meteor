@@ -78,7 +78,13 @@ var updateEntry = function(form) { // TODO: does not work right now, data seem t
 	console.log(data);
 	var collectionName = $(form).attr('data-collection');
 	MockData.createCollection(collectionName);
-	newEntry = MockData.insert(collectionName,data);
+	dataId = $(form).attr('data-id');
+	if (MockData[collectionName].findOne(dataId) ) {
+		MockData[collectionName].update(dataId,{$set: data})
+	} else {
+		newEntry = MockData.insert(collectionName,data);
+
+	}
 	// FlashMessages.display('success','Saved' + newEntry);
 	console.log(data);
 }

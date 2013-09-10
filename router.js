@@ -1,5 +1,19 @@
 // wildcard router takes path in the form of layoutname/context1.context2.templateName
 
+function getURLParameters() {
+  var searchString = window.location.search.substring(1)
+    , params = searchString.split("&")
+    , hash = {}
+    ;
+
+  if (searchString == "") return {};
+  for (var i = 0; i < params.length; i++) {
+    var val = params[i].split("=");
+    hash[unescape(val[0])] = unescape(val[1]);
+  }
+  return hash;
+}
+
 var parse = function(path) {
   path = path.split('/')
   path.shift();
@@ -30,6 +44,12 @@ var parse = function(path) {
 Meteor.Router.add({
   '*': function() {
     var path = parse(this.pathname);
+    params = getURLParameters();
+
+    $.each(params,function(name,value){
+      Session.set(name,value);
+    });
+
     
     FlashMessages.clear();
     FlashMessages.load();
@@ -56,6 +76,7 @@ Meteor.startup(function() {
     replaceImagePlaceholders();
   }
 });
+
 
 
 addActiveClassToLinks = function() {
