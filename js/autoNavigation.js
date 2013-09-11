@@ -10,4 +10,11 @@ $(document).ready(function() {
 
 	$('pre').add('code').addClass('prettyprint')
 
+	var path = $(location).attr('pathname');
+	if (path=="/" || (path.indexOf('index') >= 0 )) {
+		$('#docs').addClass("active");
+	} else {
+		$('#blog').addClass("active")
+	}
+
 });

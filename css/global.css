@@ -2,18 +2,54 @@ body, h1, h2, h3, h4, h5, h6, th, td { font-family: 'Muli', sans-serif; }
 
 .container {
 	margin-bottom: 50px;
-	margin-top: 20px;
+	margin-top: 0px;
 }
+
+h1 {
+
+}
+
+h1 small {
+	white-space: nowrap;
+}
+
+
+.header a.active {
+	color: black;
+}
+
+.header {
+	/*padding: 5px !important;*/
+}
+
+.nav-primary {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+	/*border-top: 1px solid #ccc;*/
+	border-bottom: 1px solid #ccc;
+	font-size: 1.2em;
+}
+
+.nav-primary a {
+	display: inline-block;
+	margin-right: 20px;
+	text-transform: uppercase;
+}
+
+.nav-primary a.active {
+	border-bottom: 3px solid #000;
+}
+
 
 h2 {
 	margin-top: 2em;
 	padding-top: 0.5em;
-/*	border-top: 1px solid #ddd;
-*/}
+}
 
 a h2 {
 	color: black;
 }
+
 
 a.anchor-link {
 	color: inherit;
@@ -22,12 +58,8 @@ a.anchor-link:hover {
 	text-decoration: none;
 }
 
-.active {
-	font-weight: bold;
-	background-color: yellow;
-}
-
-.affix,.navbar-fixed-top{ /* fix for weird webkit bug: http://stackoverflow.com/questions/14493533/really-weird-redraw-behavior-with-anchor-links-twitter-bootstrap-fixed-navbar */
+/* fix for weird webkit bug: http://stackoverflow.com/questions/14493533/really-weird-redraw-behavior-with-anchor-links-twitter-bootstrap-fixed-navbar */
+.affix,.navbar-fixed-top{
 	-webkit-transform: scale3d(1,1,1);
 }
 
@@ -45,4 +77,17 @@ a.anchor-link:hover {
 	padding: 3px;
 }
 
+.container-post h2 {
+	margin-top: 0em;
+}
 
+.post-list .post {
+	margin-bottom: 1em;
+}
+
+.post-list .post a {
+	font-size: 120%;
+}
+
+
+.embed-container { position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden; max-width: 100%; height: auto; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }

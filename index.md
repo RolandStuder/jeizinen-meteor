@@ -1,5 +1,6 @@
 ---
 layout: default
+title: Docs
 ---
 
 {%raw %}
@@ -8,7 +9,9 @@ A javascript prototyping framework to quickly create UI prototypes.
 </div>
 Jeiziner is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
 
-
+<div class="alert alert-warning">
+This is an early alpha version, documentation may not be up to date!
+</div>
 
 <a name="Pages &amp; Layout"> </a> 
 ## Pages and layout

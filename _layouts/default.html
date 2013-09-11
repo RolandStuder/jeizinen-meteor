@@ -1,25 +1,25 @@
 <html>
 <head>
-	<title>Jeizinen Prototyper</title>
+	<title>UI Prototyper for Meteor.js - Codename "Jeizinen"</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
 	<link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css" href="css/global.css">
-	<script src="js/autoNavigation.js"></script>
-	<script src="js/run_prettify.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/global.css">
+	<script src="/js/autoNavigation.js"></script>
+	<script src="/js/run_prettify.js"></script>
 
 	<link rel="stylesheet" href="http://jmblog.github.com/color-themes-for-google-code-prettify/css/themes/tomorrow.css">
+
+	<meta name="viewport" content="width=device-width">
+	<link rel="alternate" type="application/rss+xml" title="UI Prototyper RSS Feed" href="/rss.xml" />
 </head>
 <body >
 	<div class="container">
-		<div class="row"><div class="col-sm-12">
-					<h1>Jeizinen Prototyper <span class="text-muted">for meteor.js</span></h1>
-				</div>
-		</div>
-		<div class="row">
+		{% include header.html %}
+			<div class="row">
 			<div class="col-sm-3 allow-scroll">
 				<div id="autoNavigation" data-spy="affix" data-offset-top="0" data-offset-bottom="0">
 					<ul id="nav" class="nav"></ul>
