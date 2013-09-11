@@ -3,9 +3,9 @@ layout: default
 title: Docs
 ---
 
-{%raw %} 
+{%raw %}
 <div class="lead">
-A javascript prototyping framework to quickly create UI prototypes.
+A javascript prototyping framework to quickly create  higlhy interactive UI prototypes.
 </div>
 Jeiziner is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
 
