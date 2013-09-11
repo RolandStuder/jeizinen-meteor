@@ -15,4 +15,4 @@ title: Updates
 
 <hr>
 
-[Subscribe to RSS Feed]({{ site.baseurl}}rss.xml)
+[Subscribe to RSS Feed]({{ site.baseurl}}/rss.xml)
