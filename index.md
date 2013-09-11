@@ -3,7 +3,7 @@ layout: default
 title: Docs
 ---
 
-{%raw %}
+{%raw %} 
 <div class="lead">
 A javascript prototyping framework to quickly create UI prototypes.
 </div>
