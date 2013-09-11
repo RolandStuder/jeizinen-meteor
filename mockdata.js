@@ -20,6 +20,8 @@ MockData.insert = function(collection, data) { // use custom insert so mock help
 }
 
 if (Meteor.isClient) {
+
+
 	Handlebars.registerHelper('mockData',function(options){
 		var collectionName = options.hash['collection']
 		MockData.createCollection(collectionName);
@@ -47,54 +49,70 @@ if (Meteor.isClient) {
 	// }
 
 	Handlebars.registerHelper('mock',function(dataType,options){
-		id = this._id;
-		collection = this.collection;
-		item = MockData[this.collection].findOne(id);
-		if (options.hash.field) { fieldName = options.hash.field } else { fieldName = dataType }
-		if (!item[fieldName]) {
-			result = random[dataType](options.hash);
-			data = {}
-			data[fieldName] = result;
-			MockData[this.collection].update(id,{$set: data});
+		if (this._id != undefined) { // if encapsulated with mockData Helper...
+			id = this._id;
+			collection = this.collection;
+			item = MockData[this.collection].findOne(id);
+			if (options.hash.field) { fieldName = options.hash.field } else { fieldName = dataType }
+			if (!item[fieldName]) {
+				result = random[dataType](options.hash);
+				data = {}
+				data[fieldName] = result;
+				MockData[this.collection].update(id,{$set: data});
+			} else {
+				result = item[fieldName];
+			}
 		} else {
-			result = item[fieldName];
+			result = random[dataType](options.hash);
+
 		}
+		
 
 		result = new Handlebars.SafeString(result);
   		return result;
 	});
 }
 
-var updateEntry = function(form) { // TODO: does not work right now, data seem to come back empty....
+updateEntry = function(form) { 
 	var inputs = $(form).find('input[name]');
-	Mock = form;
-	console.log(form);
+	var Mock = form;
 	var data = {};
 	inputs.each(function(index){
-		console.log(this)
 		data[$(this).attr('name')] = $(this).val()
 		$(this).val('');
 	});
-	console.log(data);
 	var collectionName = $(form).attr('data-collection');
 	MockData.createCollection(collectionName);
-	dataId = $(form).attr('data-id');
+	var dataId = $(form).attr('data-id');
 	if (MockData[collectionName].findOne(dataId) ) {
 		MockData[collectionName].update(dataId,{$set: data})
 	} else {
 		newEntry = MockData.insert(collectionName,data);
-
 	}
-	// FlashMessages.display('success','Saved' + newEntry);
-	console.log(data);
 }
 
 if (Meteor.isClient) {
-	Meteor.startup(function(){
-		$('body').on('submit','form', function(e){
-			e.preventDefault();
-			updateEntry(this);
-		})
-	});
-
+	// Meteor.startup(function(){
+	// 	$('body').on('submit','form', function(e){
+	// 		e.preventDefault();
+	// 		updateEntry(this);
+	// 	})
+	// });
 }
+
+// enableClickActions = function() {
+//   $('body').on('click', '[data-onClick-setTrue]', function(e){
+//     _id = $(this).attr('data-id');
+//     MockData['people'].update(_id, {$set: {isEdit: true}}) // problem seems to by, that add time of binding, these things are not defined
+
+//     // console.log(this)
+//     // replaceTemplate = $(this).attr('data-replace-with-template');
+//     // id = $(this).attr('data-target');
+//     // replaceTemplate = Template['people-edit']();
+//     // selector = "#"+id.to_s;
+//     // $(selector).replaceWith('test');
+//   })
+// }
+
+
+

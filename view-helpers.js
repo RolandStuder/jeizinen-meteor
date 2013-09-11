@@ -9,3 +9,7 @@ Handlebars.registerHelper('repeat', function(n, block) {
 Handlebars.registerHelper('session',function(input){
     return Session.get(input);
 });
+
+Handlebars.registerHelper('setTrue',function(attr, id){
+	return 'data-onClick-setTrue="' + attr + '" data-id="' + id + '"'
+});

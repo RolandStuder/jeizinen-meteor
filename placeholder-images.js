@@ -9,6 +9,7 @@ var checkIfCollectionIsReady = function() {
 }
 
 var initializeCollectionWithDocument = function () {
+
   if(PlaceholderImages.find({}).count()==0){
     console.log('placeholderImages initialized....');
     PlaceholderImages.insert({comment:"intialize, necessery because I cannot check if a collection is truly empty while using autosubscribe"});
@@ -36,17 +37,17 @@ var getFlickrImages = function(query) {
       api_key: '1a02addb94c985970bca4339af022b01',
       format: 'json',
       method: 'flickr.photos.search',
-        license: "4,5,6,7", // All NC Licenses
-        text: query,
-        safe_search: 3,
-        sort: "relevance"
-      },
-      dataType: 'jsonp',
-      jsonp: 'jsoncallback',
-      success: function(response) {
-        createImagePoolDocument(query, response.photos.photo);
-      }
-    });
+      license: "4,5,6,7", // All NC Licenses
+      text: query,
+      safe_search: 3,
+      sort: "relevance"
+    },
+    dataType: 'jsonp',
+    jsonp: 'jsoncallback',
+    success: function(response) {
+      createImagePoolDocument(query, response.photos.photo);
+    }
+  });
 }
 
 var replaceNow = function() { 
@@ -71,7 +72,7 @@ var replaceNow = function() {
 };
 
 var replacePlaceholders = function() {
-  placeholders = $("img[data-search]");
+  placeholders = $($("img[data-search]").get().reverse());
   uniqueQueries = [];
 
   placeholders.each(function(){ // get unique queries
@@ -125,7 +126,7 @@ Meteor.startup( function() {
   replaceImagePlaceholders = function() {
     if ($("img[data-search]").length) {
       if(!(PlaceholderImages.findOne())) {
-        waitForCollection = Meteor.setInterval(checkIfCollectionIsReady,100)
+        waitForCollection = Meteor.setInterval(checkIfCollectionIsReady,1000)
       } else {
         replacePlaceholders();
       }

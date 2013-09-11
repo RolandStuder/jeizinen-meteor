@@ -26,7 +26,7 @@ var parse = function(path) {
     console.log('!path too long cannot handle it');
   
   } else if (path == '') {
-    page = 'index';
+    sections = 'index';
 
   } else if (path.length === 2 ) { 
     layout = path[0];
@@ -79,9 +79,25 @@ Meteor.startup(function() {
   Template.renderPage.rendered = function() {
     addActiveClassToLinks();
     replaceImagePlaceholders();
+    // enableClickActions();
   }
 });
 
+if (Meteor.isClient) {
+  Template.renderPage.events({
+    'click [data-onClick-setTrue]' : function () {
+      MockData[this.collection].update(this._id, {$set: {isEdit: true}})
+    },
+    'click input[type=submit]' : function (event) {
+      event.preventDefault();
+      console.log(event.target)
+      console.log($(event.target).parent('form'))
+      updateEntry($(event.target).parent('form'))
+      MockData[this.collection].update(this._id, {$set: {isEdit: false}})
+      updateEntry(this);
+    }
+  });
+}
 
 
 addActiveClassToLinks = function() {
@@ -96,3 +112,4 @@ addActiveClassToLinks = function() {
     }
   });
 }
+

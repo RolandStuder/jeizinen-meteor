@@ -1,4 +1,4 @@
-Handlebars.registerHelper('random', function(dataType, options) {
+Handlebars.registerHelper('random', function(dataType, options) { // deprecated, use mock now...
   data = random[dataType](options.hash);
   return new Handlebars.SafeString(data);
 });

@@ -30,6 +30,7 @@ Package.on_use(function (api, where) {
     api.export('FlashMessages');
     api.export('MockData');
     api.export('Mock');
+    api.export('populateEditForms');
 
 });
 
