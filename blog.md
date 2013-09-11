@@ -1,6 +1,6 @@
 ---
 layout: post_list
-title: Updates
+title: Blog
 ---
 
 <div class="post-list">
