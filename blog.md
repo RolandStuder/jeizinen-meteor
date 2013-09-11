@@ -15,4 +15,5 @@ title: Blog
 
 <hr>
 
-[Subscribe to RSS Feed]({{ site.baseurl}}/rss.xml)
+<a href="{{site.baseurl }}/rss.xml">Subscribe to RSS feed</a>
+
