@@ -3,7 +3,11 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
-	both = ['client', 'server'];
+	
+    both   = ['client', 'server'];
+    client   = ['client'];
+    server   = ['server'];
+
 	api.use('jquery', both);
     api.use('router', 'client');
     api.use('underscore', both);
@@ -12,18 +16,23 @@ Package.on_use(function (api, where) {
     api.use('backbone', both);
     api.use('mongo-livedata', both);
     api.use('bootstrap-3', 'client');
+    api.use('coffeescript', both);
 
     api.add_files(['server-and-client.js'], both);
     api.add_files(['mockdata.js'],both)
     api.add_files(['server.js'], 'server');
     api.add_files([ // client files
             'placeholder-images.js',
-            'route_templates.html',
             'mock-data-helpers.js',
             'view-helpers.js',
-            'router.js'
         ], ['client']);
 
+    api.add_files([ // client files
+            'controllers/events.coffee',
+            'controllers/errors.coffee',
+            'controllers/router.coffee',
+            'templates/templates.html'
+        ], client);
     api.add_files(['flash-messages.js','flash-messages.html'], ['client'])
 
     api.export('PlaceholderImages');
