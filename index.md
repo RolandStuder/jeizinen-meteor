@@ -7,7 +7,7 @@ title: Docs
 <div class="lead">
 A javascript prototyping framework to quickly create  highly interactive UI prototypes.
 </div>
-Jeiziner is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
+Jeizinen is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
 
 <div class="alert alert-warning">
 This is an early alpha version, documentation may not be up to date!
