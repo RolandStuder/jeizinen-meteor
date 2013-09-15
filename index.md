@@ -7,7 +7,7 @@ title: Docs
 <div class="lead">
 A javascript prototyping framework to quickly create  highly interactive UI prototypes.
 </div>
-Jeizinen is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
+Jeiziner is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
 
 <div class="alert alert-warning">
 This is an early alpha version, documentation may not be up to date!
@@ -139,13 +139,12 @@ When you click on this link, it will show:
 		  "packages": {
 		  	"jeizinen": {
 		  		"git": "https://github.com/RolandStuder/jeizinen-meteor.git"
-		  	},
-		  	"bootstrap-3" : {}
+		  	}
 		  }
 		}
 
-- recommended: run command `mrt add bootstrap-3
-- run the command mrt`
+- recommended: run command `mrt add bootstrap-3`
+- run the command `mrt`
 - point your browser to `localhost:3000`
 
 <a href="https://github.com/RolandStuder/jeizinen-meteor" class="btn btn-success btn-block">Jeizinen on GitHub <br><small>Download or clone</small></a>
