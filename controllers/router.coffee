@@ -17,7 +17,7 @@ paramsToSession = ->
     Session.set param[0], param[1]
 
 
-parse = (path) -> #
+parse = (path) -> 
   path = path.split("/") 
   path.shift()
 

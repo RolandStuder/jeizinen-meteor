@@ -19,25 +19,26 @@ Package.on_use(function (api, where) {
     api.use('coffeescript', both);
 
     api.add_files(['server-and-client.js'], both);
-    api.add_files(['mockdata.js'],both)
     api.add_files(['server.js'], 'server');
     api.add_files([ // client files
             'placeholder-images.js',
-            'mock-data-helpers.js',
             'view-helpers.js',
         ], ['client']);
 
     api.add_files([ // client files
             'controllers/events.coffee',
+            'controllers/collections.coffee',
             'controllers/errors.coffee',
             'controllers/router.coffee',
+            'lib/random.coffee',
             'templates/templates.html'
         ], client);
     api.add_files(['flash-messages.js','flash-messages.html'], ['client'])
 
     api.export('PlaceholderImages');
     api.export('FlashMessages');
-    api.export('MockData');
+    api.export('Collection');
+    api.export('collection');
     api.export('Mock');
     api.export('populateEditForms');
 
