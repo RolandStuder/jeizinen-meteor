@@ -26,7 +26,7 @@ In one html-file you define the layout, for example you create a `_layout.html`
 		</body>
 	<html>
 
-Now you can enter oder link any URL like `localhost:3000/myTemplate`and Jeizinen will try to render a template with that name...
+Now you can enter or link any URL like `localhost:3000/myTemplate`and Jeizinen will try to render a template with that name...
 
 A template looks like this
 
@@ -51,45 +51,54 @@ In your main `html` put {{> renderLayout}} instead of {{> renderPage }}. Then cr
 
 Now you can navigate to page like `/layoutName/pageName` and the template (pageName) will be surrounded by the layout (layoutName).
 
-Note: You cannot render a layout without template.
+Note: You cannot render a layout without a template.
 
 ### Automatically get .active on links
 
 All links to the current page, get the css class `.active`, also links within Bootstrap navigation elements are automatically set to `.active`.
 
-You can also selectively activate links by pointing your links as follows
+If you have a navigation with multiple levels, then you can set parent sections as 'active' by writing your links as follows
 
     <a href="documents.someTemplate">...</a>
 
 When going to /documents.someTemplate `someTemplate` will be rendered and links pointing to `someTemplate` and links pointing to `documents` will get the .active class.
 
 <a name="Mockdata"> </a> 
-## Use Mockdata - the `random` helpers
+## random data like names and phonenumbers
 
-In any view, use the `{{random "dataType"}}` helper to create mockdata.
+	{{random 'name'}}
 
-	{{ random "name"}} -> gives you combination of a first name  and a family name
-	
-	{{ random "firstName"}} 
-	{{ random "familyName"}} 
-	{{ random "phoneNumber"}}
+Will return a random combinations of a first name and a family name. Other options are:
 
-	{{ random "pick" "some,comma,separated,values"}} -> randomly picks one of the comma-separated values
+	{{random 'firstName'}}
+	{{random 'familyName'}}
+	{{random 'phoneNumber'}}
+	{{random 'email'}}
 
-Please tell [me](mailto:roland.studer@gmail.com) what other dataTypes you need.
+more to come... (dates, birthdays)
 
+### random pick of a list defined by yourself
 
-<a name="Repeater"> </a> 	
-## Create lists easily with the `repeat` helper
+	{{pick 'The Alliance, The Rebels, Neutral'}}
 
-You can wrap any content with a repeater, to create lists, just pass an integer and let it the block be repeated. Now here it starts to get interesting as you can combine mockdata with the repeater (every block will contain different mock-data)
+Will return one of the comma-separated options.
 
-	{{#repeat 10}}
-		<div>
-			<b>{{ random "Name"}}</b>
-			<small>{{ random "phoneNumber"}}</small>
-		</div>
-	{{/repeat}}
+## lists of objects with random data
+
+You can create sets of datas, called collections, and can use them in your views without defining them beforehand. For example you can create a list of people like this:
+
+	{{#collection 'people' create='10'}}
+		{{field 'name'}}
+	{{/collection}}
+
+This will output a list of 10 names. **This data is saved and will not change, if you switch between pages.** However if you reload a page, the collections are reset.
+
+If you use on the options that work for the random helper, it automatically returns a random value. More possibilities are available:
+
+	{{#collection 'people' create='10'}}
+		{{field 'name' random="firstName"}} // will give you a random first name
+		{{field 'category' pick="a,b,c"}} // will return a random pick
+	{{/collection}}
 
 <a name="Image Placeholders"> </a> 		
 ## add placeholder images from flickr
@@ -114,21 +123,13 @@ When you click on this link, it will show:
 
 <div class="alert alert-success">This is good!</div>
 
-#### via javascript
-
-	FlashMessages.send('type','message'); 		// display message on the next page
-	FlashMessages.display('type','messsage'); 	// display message immediately
-	FlashMessages.clear('type','messsage'); 	// remove displayed images
-
-You can pass any string to `message` (including html).
-
 <a name="Get Started"> </a>
 ## To get started...
 
 - Install [Meteor.js](http://meteor.com)
 - Install [Meteorite](https://github.com/oortcloud/meteorite).
-- Git clone or download the [Jeizinen Prototyper](https://github.com/RolandStuder/jeizinen-meteor). 
-- In your Meteor App edit `smart.json` to something like
+- run the command `meteor create myapp`
+- In your Meteor App create `smart.json` in the root directory to something like
 
 		{
 		  "meteor": {
@@ -137,15 +138,15 @@ You can pass any string to `message` (including html).
 		  },
 		  "packages": {
 		  	"jeizinen": {
-		  		"path": "/path/to/jeizinen-meteor"
-		  	}
+		  		"git": "https://github.com/RolandStuder/jeizinen-meteor.git"
+		  	},
+		  	"bootstrap-3" : {}
 		  }
 		}
 
-- Jeizinen Prototyper is optimized for use with [bootstrap-3](http://getbootstrap.com). So add the meteorite package: `mrt add bootstrap-3`
-
-
-It is not yet available over [atmosphere.meteor.com](http://atmosphere.meteor.com), if you want to use Jeizinen Prototyper [drop my a line](mailto:roland.studer@gmail.com) and I will publish it, so it can be more easily installed (via `mrt add jeizinen`). 
+- recommended: run command `mrt add bootstrap-3
+- run the command mrt`
+- point your browser to `localhost:3000`
 
 <a href="https://github.com/RolandStuder/jeizinen-meteor" class="btn btn-success btn-block">Jeizinen on GitHub <br><small>Download or clone</small></a>
 {%endraw %}

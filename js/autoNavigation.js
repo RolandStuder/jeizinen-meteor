@@ -2,7 +2,6 @@
 
 $(document).ready(function() {
 	anchors = $('a[name]');
-	console.log(anchors);
 	$(anchors).each(function(){
 		var link = '<a href="#' + $(this).attr('name') + '">'+ $(this).attr('name') +'</a>';
 		$("#autoNavigation ul").append('<li />').find("li:last").append(link);
