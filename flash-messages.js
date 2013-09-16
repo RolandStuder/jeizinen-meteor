@@ -24,7 +24,7 @@ Meteor.startup(function() {
 		return FlashMessages.find({display: true});
 	}	
 
-	$('body').on('click','a[data-flash-message]',function(e){
+	$('body').on('click','[data-flash-message]',function(e){
 		FlashMessages.send($(this).attr('data-flash-message-type'),$(this).attr('data-flash-message'));
 	})
 });

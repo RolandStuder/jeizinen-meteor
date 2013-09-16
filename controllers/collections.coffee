@@ -19,19 +19,56 @@ Collections.insert = (collection, data) -> # use custom insert so mock helper, k
   data["createdAt"] = new Date().getTime()
   Collections[collection].insert data
 
+Collections.initialize = (name,amount) ->
+  amount = 1 unless amount
+  Collections.create name
+  Collections.createEmptyItems(name, amount)
+
+Collections.updateDoc = (document,form) ->
+  inputs = $(form).find("input[name]")
+  data = {}
+  Collections.create document.collection
+  collection = Collections[document.collection]
+  inputs.each () ->
+    data[ $(this).attr("name") ] = $(this).val()
+  if collection.findOne(document._id)
+    collection.update document._id, $set: data
+  Session.set 'currentDocument', Collections[document.collection].findOne(document._id)
+
+Collections.createDoc = (form) ->
+  inputs = $(form).find("input[name]")
+  name = $(form).attr("data-collection")
+  data = {collection: name}
+  Collections.create name
+  collection = Collections[name]
+  inputs.each () ->
+    data[ $(this).attr("name") ] = $(this).val()
+  newDocument = Collections.insert name, data
+  Session.set 'currentDocument', Collections[name].findOne(newDocument)
+
+
+
+
 
 if Meteor.isClient
 
   Handlebars.registerHelper "collection", (options) ->
     name = options.hash['name']
-    amount = options.hash['create']
-    Collections.create name
-    if amount
-      Collections.createEmptyItems(name, amount)
+    Collections.initialize(name,options.hash['create'])
     result = ""
     Collections[name].find({},sort: createdAt: -1).forEach (item) ->
       result += options.fn(item)
     result
+
+  Handlebars.registerHelper "document", (options) ->
+    currentDocument = Session.get('currentDocument')
+    name = options.hash['collection']
+    Collections.initialize(options.hash['collection'],options.hash['create'])
+    if currentDocument
+      if currentDocument.collection == name
+        options.fn(currentDocument)
+    else
+      options.fn(Collections[name].findOne())
 
   Handlebars.registerHelper "field", (field, options) ->
     if @_id
@@ -51,38 +88,7 @@ if Meteor.isClient
       data[field]
 
 
-#   # updateField = function(collection, id, field, value) {
-#   #   console.log(collection + id + field + value);
-#   #   Collection[collection].update(id,{$set: {field: value}});
-#   # }
 
-
-# @updateEntry = (form) ->
-#   inputs = $(form).find("input[name]")
-#   Mock = form
-#   data = {}
-#   inputs.each (index) ->
-#     data[$(this).attr("name")] = $(this).val()
-#     $(this).val ""
-
-#   collectionName = $(form).attr("data-collection")
-#   Collection.create collectionName
-#   dataId = $(form).attr("data-id")
-#   if Collection[collectionName].findOne(dataId)
-#     Collection[collectionName].update dataId,
-#       $set: data
-
-#   else
-#     newEntry = Collection.insert(collectionName, data)
-
-# Meteor.isClient
-
-# Meteor.startup(function(){
-#   $('body').on('submit','form', function(e){
-#     e.preventDefault();
-#     updateEntry(this);
-#   })
-# });
 
 # enableClickActions = function() {
 #   $('body').on('click', '[data-onClick-setTrue]', function(e){
