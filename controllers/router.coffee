@@ -40,7 +40,6 @@ error = (message) ->
   FlashMessages.display "danger", "JEIZINEN ERROR: " + message
   FlashMessages.send    "danger", "JEIZINEN ERROR: " + message
 
-
 # Jeizinen provides two empty templates that can render any layout/template
 Meteor.startup ->
   Template.renderLayout.content = ->

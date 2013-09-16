@@ -18,13 +18,20 @@
 Meteor.startup ->
 
     Template.renderLayout.events
+
         "click a": (event) ->
             Session.set('currentDocument',this)
 
-    Template.renderLayout.events
         "click input[type=submit]": (event) ->
             event.preventDefault()
             if this._id
                 Collections.updateDoc this, $(event.target).parent("form")
             else
                 Collections.createDoc $(event.target).parent("form")
+
+        "click [data-toggle-boolean]": (event) ->
+            field = $(event.target).attr('data-toggle-boolean')
+            if this._id
+                Collections.toggleBoolean this, field
+            else 
+                Session.toggle field

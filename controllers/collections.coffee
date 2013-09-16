@@ -35,6 +35,16 @@ Collections.updateDoc = (document,form) ->
     collection.update document._id, $set: data
   Session.set 'currentDocument', Collections[document.collection].findOne(document._id)
 
+Collections.toggleBoolean = (document, field) ->
+  data = {}
+  if document[field] == true
+    data[field] = false
+  else 
+    data[field] = true
+  Collections[document.collection].update(document._id, $set: data)
+
+
+
 Collections.createDoc = (form) ->
   inputs = $(form).find("input[name]")
   name = $(form).attr("data-collection")
@@ -45,10 +55,6 @@ Collections.createDoc = (form) ->
     data[ $(this).attr("name") ] = $(this).val()
   newDocument = Collections.insert name, data
   Session.set 'currentDocument', Collections[name].findOne(newDocument)
-
-
-
-
 
 if Meteor.isClient
 
