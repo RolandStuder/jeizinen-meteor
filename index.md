@@ -87,7 +87,7 @@ Will return one of the comma-separated options.
 
 You can create sets of datas, called collections, and can use them in your views without defining them beforehand. For example you can create a list of people like this:
 
-	{{#collection 'people' create='10'}}
+	{{#collection name='people' create='10'}}
 		{{field 'name'}}
 	{{/collection}}
 
@@ -95,7 +95,7 @@ This will output a list of 10 names. **This data is saved and will not change, i
 
 If you use on the options that work for the random helper, it automatically returns a random value. More possibilities are available:
 
-	{{#collection 'people' create='10'}}
+	{{#collection name='people' create='10'}}
 		{{field 'name' random="firstName"}} // will give you a random first name
 		{{field 'category' pick="a,b,c"}} // will return a random pick
 	{{/collection}}
