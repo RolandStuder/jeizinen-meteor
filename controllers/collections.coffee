@@ -1,6 +1,9 @@
 # Supercollection Collection will eat anything...
 # warning will only work within templates...
 
+# COLLECTION CONTROLLER
+
+
 @Collections = new Meteor.Collection("Collection")
 
 Collections.create = (name) ->
@@ -8,21 +11,20 @@ Collections.create = (name) ->
   newCollection[name] = new Meteor.Collection(null)  unless Collections[name]
   _.extend Collections, newCollection
 
-Collections.createEmptyItems = (name, amount) ->
-  if Collections[name].find().count() is 0
-      for i in [0...amount] by 1
-        item = Collections.insert(name,{collection: name})
-
-Collections.insert = (collection, data) -> # use custom insert so mock helper, knows which collection the item belongs to
-  create "collection"  unless Collections[collection]
+Collections.insert = (collection, data, amount) -> # use custom insert so mock helper, knows which collection the item belongs to
+  Collections.create collection  unless Collections[collection]
+  amount = 1 unless amount
   data["collection"] = collection
   data["createdAt"] = new Date().getTime()
-  Collections[collection].insert data
+  for i in [1..amount]
+    insertData = Collections.execObjectFunctions(data)
+    Collections[collection].insert insertData
 
 Collections.initialize = (name,amount) ->
-  amount = 1 unless amount
+  amount = 0 unless amount
   Collections.create name
-  Collections.createEmptyItems(name, amount)
+  if Collections[name].find().count() is 0
+      Collections.insert name, {}, amount
 
 Collections.updateDoc = (document,form) ->
   inputs = $(form).find("input[name]")
@@ -33,7 +35,7 @@ Collections.updateDoc = (document,form) ->
     data[ $(this).attr("name") ] = $(this).val()
   if collection.findOne(document._id)
     collection.update document._id, $set: data
-  Session.set 'currentDocument', Collections[document.collection].findOne(document._id)
+  # Session.set 'currentDocument', Collections[document.collection].findOne(document._id)
 
 Collections.toggleBoolean = (document, field) ->
   data = {}
@@ -42,8 +44,6 @@ Collections.toggleBoolean = (document, field) ->
   else 
     data[field] = true
   Collections[document.collection].update(document._id, $set: data)
-
-
 
 Collections.createDoc = (form) ->
   inputs = $(form).find("input[name]")
@@ -54,13 +54,31 @@ Collections.createDoc = (form) ->
   inputs.each () ->
     data[ $(this).attr("name") ] = $(this).val()
   newDocument = Collections.insert name, data
-  Session.set 'currentDocument', Collections[name].findOne(newDocument)
+  # Session.set 'currentDocument', Collections[name].findOne(newDocument)
+
+# HELPER METHODS
+
+
+Collections.execObjectFunctions = (obj) -> 
+  returnObj = {}
+  for key, value of obj
+      if _.isFunction value
+        value = eval("obj."+key+"()")
+        # value = true
+      returnObj[key] = value
+  
+  returnObj
+
+
+# HANDLEBARS HELPERS
+
+
 
 if Meteor.isClient
 
   Handlebars.registerHelper "collection", (options) ->
     name = options.hash['name']
-    Collections.initialize(name,options.hash['create'])
+    Collections.initialize name, options.hash['create']
     result = ""
     Collections[name].find({},sort: createdAt: -1).forEach (item) ->
       result += options.fn(item)
@@ -69,7 +87,7 @@ if Meteor.isClient
   Handlebars.registerHelper "document", (options) ->
     currentDocument = Session.get('currentDocument')
     name = options.hash['collection']
-    Collections.initialize(options.hash['collection'],options.hash['create'])
+    Collections.initialize options.hash['collection'],options.hash['create']
     if currentDocument
       if currentDocument.collection == name
         options.fn(currentDocument)
@@ -109,3 +127,6 @@ if Meteor.isClient
 #     // $(selector).replaceWith('test');
 #   })
 # }
+
+# experimental
+

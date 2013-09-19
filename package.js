@@ -39,7 +39,7 @@ Package.on_use(function (api, where) {
     api.export('FlashMessages');
     api.export('Collection');
     api.export('collection');
-    api.export('Mock');
+    api.export('seed');
     api.export('populateEditForms');
 
 });

@@ -1,5 +1,9 @@
 # wildcard router takes path in the form of layoutname/context1.context2.templateName
 
+Meteor.Router.add "public": ->
+  
+
+
 Meteor.Router.add "*": ->
   path = parse(@pathname)
   paramsToSession()
@@ -55,8 +59,9 @@ Meteor.startup ->
 addActiveClassToLinks = ->
   $(".nav > li").removeClass "active"
   $("a").removeClass("active").each ->
-    sections = $(this).attr("href").split(".")
-    target = sections[sections.length - 1].replace '/', ''
-    if $.inArray(target, Session.get("currentSections")) >= 0
-      $(this).addClass "active"
-      $(this).parents(".nav > li").addClass "active"
+    if $(this).attr("href")
+      sections = $(this).attr("href").split(".")
+      target = sections[sections.length - 1].replace '/', ''
+      if $.inArray(target, Session.get("currentSections")) >= 0
+        $(this).addClass "active"
+        $(this).parents(".nav > li").addClass "active"

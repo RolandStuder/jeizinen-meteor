@@ -1,33 +1,21 @@
-# # enableClickActions();
-# Meteor.startup ->
-#   Template.renderPage.events
-
-#     "click [data-onClick-setTrue]": ->
-#       Collection[@collection].update @_id,
-#         $set:
-#           isEdit: true
-
-    # "click input[type=submit]": (event) ->
-    #   event.preventDefault()
-    #   updateEntry this, $(event.target).parent("form")
-    #   Collection[@collection].update @_id,
-    #     $set:
-    #       isEdit: false
-    #   updateEntry this
-
 Meteor.startup ->
 
     Template.renderLayout.events
 
         "click a": (event) ->
-            Session.set('currentDocument',this)
+            # Session.set('currentDocument',this)
 
         "click input[type=submit]": (event) ->
             event.preventDefault()
+            form = $(event.target).parent("form")
+            console.log this._id
             if this._id
-                Collections.updateDoc this, $(event.target).parent("form")
+                Collections.updateDoc this, form
+                form[0].reset()
+
             else
-                Collections.createDoc $(event.target).parent("form")
+                Collections.createDoc form
+                form[0].reset()
 
         "click [data-toggle-boolean]": (event) ->
             field = $(event.target).attr('data-toggle-boolean')
