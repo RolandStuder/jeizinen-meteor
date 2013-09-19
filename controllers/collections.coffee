@@ -122,6 +122,15 @@ if Meteor.isClient
         Collections[name].update @_id,{$set: data}
       data[field]
 
+  Handlebars.registerHelper "count", (collection, field) -> #counts ocurrances in subcollection
+    if Collections[collection]
+      query = {}
+      query[field] = true 
+      query['context._id'] = this._id
+      Collections[collection].find(query).count()
+    else
+      0
+
 
 
 
