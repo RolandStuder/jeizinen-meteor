@@ -8,8 +8,11 @@
 
 Collections.create = (name) ->
   newCollection = {}
-  newCollection[name] = new Meteor.Collection(null)  unless Collections[name]
-  _.extend Collections, newCollection
+  if name
+    unless Collections[name]  
+      newCollection[name] = new Meteor.Collection(null)  unless Collections[name]
+      _.extend Collections, newCollection
+      console.log "created: " + name
 
 Collections.insert = (collection, data, amount) -> # use custom insert so mock helper, knows which collection the item belongs to
   Collections.create collection  unless Collections[collection]
@@ -20,11 +23,14 @@ Collections.insert = (collection, data, amount) -> # use custom insert so mock h
     insertData = Collections.execObjectFunctions(data)
     Collections[collection].insert insertData
 
-Collections.initialize = (name,amount) ->
-  amount = 0 unless amount
-  Collections.create name
-  if Collections[name].find().count() is 0
-      Collections.insert name, {}, amount
+Collections.initialize = (name,amount,context) ->
+  amount = 1 unless amount
+  if name
+    Collections.create name
+    if Collections[name].find().count() is 0
+      Collections.insert name, {context: context}, amount
+    if Collections[name].find({'context._id': context._id}).count() is 0
+      Collections.insert name, {context: context}, amount 
 
 Collections.updateDoc = (document,form) ->
   inputs = $(form).find("input[name]")
@@ -64,7 +70,6 @@ Collections.execObjectFunctions = (obj) ->
   for key, value of obj
       if _.isFunction value
         value = eval("obj."+key+"()")
-        # value = true
       returnObj[key] = value
   
   returnObj
@@ -75,19 +80,25 @@ Collections.execObjectFunctions = (obj) ->
 
 
 if Meteor.isClient
-
   Handlebars.registerHelper "collection", (options) ->
     name = options.hash['name']
-    Collections.initialize name, options.hash['create']
+    Collections.initialize name, options.hash['create'], this
     result = ""
-    Collections[name].find({},sort: createdAt: -1).forEach (item) ->
-      result += options.fn(item)
+    context = {_id: this._id}
+    context = this._id
+    console.log "count"
+    if this._id
+      Collections[name].find({'context._id': context}).forEach (item) ->
+        result += options.fn(item)
+    else 
+      Collections[name].find({},sort: createdAt: -1).forEach (item) ->
+        result += options.fn(item)
     result
 
   Handlebars.registerHelper "document", (options) ->
     currentDocument = Session.get('currentDocument')
     name = options.hash['collection']
-    Collections.initialize options.hash['collection'],options.hash['create']
+    Collections.initialize options.hash['collection'],options.hash['create'], this
     if currentDocument
       if currentDocument.collection == name
         options.fn(currentDocument)
