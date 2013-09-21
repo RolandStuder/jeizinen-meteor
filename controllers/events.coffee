@@ -3,7 +3,7 @@ Meteor.startup ->
     Template.renderLayout.events
 
         "click a": (event) ->
-            Session.set('currentDocument',this)
+            Session.set('currentDocument.'+this.collection ,this)
 
         "click input[type=submit]": (event) ->
             event.preventDefault()
@@ -20,3 +20,9 @@ Meteor.startup ->
                 Collections.toggleBoolean this, field
             else 
                 Session.toggle field
+
+        "click [data-set-field]": (event) ->
+            field = $(event.target).attr('data-set-field')
+            collection = $(event.target).attr('data-set-collection')
+            value = $(event.target).attr('data-set-value')
+            Collections.setAll collection, field, value, this

@@ -51,6 +51,18 @@ Collections.toggleBoolean = (document, field) ->
     data[field] = true
   Collections[document.collection].update(document._id, $set: data)
 
+Collections.setAll = (collection, field, value, context) ->
+  data = {}
+  if value is "true" then value = true
+  data[field] = value
+  ids = []
+  Collections[collection].find({'context._id': context._id}).forEach (item) ->
+    ids.push(item._id)
+  console.log ids
+  # update({}, $set: data)
+  # Collections[collection].update({}, $set: data) #TODO: ensure multiple are updated, or better- the ones in context
+  Collections[collection].update({_id: {$in: ids}}, $set: data, {multi:true});
+
 Collections.createDoc = (form) ->
   inputs = $(form).find("input[name]")
   name = $(form).attr("data-collection")
@@ -84,11 +96,8 @@ if Meteor.isClient
     name = options.hash['name']
     Collections.initialize name, options.hash['create'], this
     result = ""
-    context = {_id: this._id}
-    context = this._id
-    console.log "count"
     if this._id
-      Collections[name].find({'context._id': context}).forEach (item) ->
+      Collections[name].find({'context._id': this._id}).forEach (item) ->
         result += options.fn(item)
     else 
       Collections[name].find({},sort: createdAt: -1).forEach (item) ->
@@ -96,7 +105,7 @@ if Meteor.isClient
     result
 
   Handlebars.registerHelper "document", (options) ->
-    currentDocument = Session.get('currentDocument')
+    currentDocument = Session.get('currentDocument.'+options.hash['collection'])
     name = options.hash['collection']
     Collections.initialize options.hash['collection'],options.hash['create'], this
     if currentDocument
@@ -131,6 +140,13 @@ if Meteor.isClient
     else
       0
 
+  Handlebars.registerHelper "equal", (a,b) ->
+    if a is b then true else false
+
+  Handlebars.registerHelper "setAll", (collection, field, value) ->
+    result = ' data-set-field=' + field
+    result += ' data-set-collection=' + collection
+    result += ' data-set-value=' + value
 
 
 
