@@ -114,9 +114,7 @@ if Meteor.isClient
     currentDocument = Session.get('currentDocument.'+options.hash['collection'])
     name = options.hash['collection']
     Collections.initialize options.hash['collection'],options.hash['create'], this
-    console.log currentDocument
     if currentDocument
-      # options.fn(Collections[name].findOne(currentDocument._id))
       currentDocumentObj = Collections[name].findOne(currentDocument._id)
       if currentDocumentObj.context
         currentDocument.parent = Collections[currentDocument.context.collection].findOne(currentDocument.context._id)
