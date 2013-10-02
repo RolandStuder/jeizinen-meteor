@@ -15,7 +15,7 @@ Collections.create = (name) ->
       console.log "created: " + name
 
 Collections.insert = (collection, data, amount) -> # use custom insert so mock helper, knows which collection the item belongs to
-  Collections.create collection  unless Collections[collection]
+  Collections.create collection unless Collections[collection]
   amount = 1 unless amount
   data["collection"] = collection
   data["createdAt"] = new Date().getTime()
@@ -24,7 +24,7 @@ Collections.insert = (collection, data, amount) -> # use custom insert so mock h
     Collections[collection].insert insertData
 
 Collections.initialize = (name,amount,context) ->
-  amount = 1 unless amount
+  amount = 0 unless amount
   if name
     Collections.create name
     if Collections[name].find().count() is 0
@@ -53,14 +53,19 @@ Collections.toggleBoolean = (document, field) ->
 
 Collections.setAll = (collection, field, value, context) ->
   data = {}
-  if value is "true" then value = true
   data[field] = value
   ids = []
   Collections[collection].find({'context._id': context._id}).forEach (item) ->
     ids.push(item._id)
-  console.log ids
-  # update({}, $set: data)
-  # Collections[collection].update({}, $set: data) #TODO: ensure multiple are updated, or better- the ones in context
+  Collections[collection].update({_id: {$in: ids}}, $set: data, {multi:true});
+
+Collections.setAllBoolean = (collection, field, value, context) ->
+  data = {}
+  if value is "true" then value = true else value = false 
+  data[field] = value
+  ids = []
+  Collections[collection].find({'context._id': context._id}).forEach (item) ->
+    ids.push(item._id)
   Collections[collection].update({_id: {$in: ids}}, $set: data, {multi:true});
 
 Collections.createDoc = (form) ->
@@ -83,7 +88,6 @@ Collections.execObjectFunctions = (obj) ->
       if _.isFunction value
         value = eval("obj."+key+"()")
       returnObj[key] = value
-  
   returnObj
 
 
@@ -96,21 +100,27 @@ if Meteor.isClient
     name = options.hash['name']
     Collections.initialize name, options.hash['create'], this
     result = ""
-    if this._id
+    if this._id #if there is a surrounding context, only find element with that context
+      parent = Collections[this.collection].findOne(this._id)
       Collections[name].find({'context._id': this._id}).forEach (item) ->
+        item.parent = parent
         result += options.fn(item)
     else 
       Collections[name].find({},sort: createdAt: -1).forEach (item) ->
         result += options.fn(item)
     result
 
-  Handlebars.registerHelper "document", (options) ->
+  Handlebars.registerHelper "document", (options) -> #BUG: does not rerender on documentChange 
     currentDocument = Session.get('currentDocument.'+options.hash['collection'])
     name = options.hash['collection']
     Collections.initialize options.hash['collection'],options.hash['create'], this
+    console.log currentDocument
     if currentDocument
-      if currentDocument.collection == name
-        options.fn(currentDocument)
+      # options.fn(Collections[name].findOne(currentDocument._id))
+      currentDocumentObj = Collections[name].findOne(currentDocument._id)
+      if currentDocumentObj.context
+        currentDocument.parent = Collections[currentDocument.context.collection].findOne(currentDocument.context._id)
+      options.fn(currentDocument)
     else
       options.fn(Collections[name].findOne())
 
@@ -147,6 +157,12 @@ if Meteor.isClient
     result = ' data-set-field=' + field
     result += ' data-set-collection=' + collection
     result += ' data-set-value=' + value
+
+  Handlebars.registerHelper "setAllBoolean", (collection, field, value) ->
+    result = ' data-set-field-boolean=' + field
+    result += ' data-set-collection=' + collection
+    result += ' data-set-value=' + value
+
 
 
 
