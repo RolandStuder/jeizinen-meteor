@@ -45,7 +45,7 @@ Collections.updateDoc = (document,form) ->
 
 Collections.toggleBoolean = (document, field) ->
   data = {}
-  if document[field] == true
+  if document[field] is true
     data[field] = false
   else 
     data[field] = true
@@ -160,23 +160,4 @@ if Meteor.isClient
     result = ' data-set-field-boolean=' + field
     result += ' data-set-collection=' + collection
     result += ' data-set-value=' + value
-
-
-
-
-# enableClickActions = function() {
-#   $('body').on('click', '[data-onClick-setTrue]', function(e){
-#     _id = $(this).attr('data-id');
-#     Collection['people'].update(_id, {$set: {isEdit: true}}) // problem seems to by, that add time of binding, these things are not defined
-
-#     // console.log(this)
-#     // replaceTemplate = $(this).attr('data-replace-with-template');
-#     // id = $(this).attr('data-target');
-#     // replaceTemplate = Template['people-edit']();
-#     // selector = "#"+id.to_s;
-#     // $(selector).replaceWith('test');
-#   })
-# }
-
-# experimental
 

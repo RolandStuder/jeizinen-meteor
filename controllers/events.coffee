@@ -4,7 +4,6 @@ Meteor.startup ->
 
         "click a": (event) ->
             Session.set('currentDocument.'+this.collection ,this)
-            console.log this
 
         "click input[type=submit]": (event) ->
             event.preventDefault()
