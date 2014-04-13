@@ -7,7 +7,7 @@ $(document).ready(function() {
 		$("#autoNavigation ul").append('<li />').find("li:last").append(link);
 	})
 
-	$('pre').add('code').addClass('prettyprint')
+	// $('pre').add('code').addClass('prettyprint')
 
 	var path = $(location).attr('pathname');
 	if (path=="/" || (path.indexOf('index') >= 0 )) {
