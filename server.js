@@ -7,3 +7,7 @@ Meteor.methods({
 		fakeCollection = new Meteor.Collection('fakeCollection')
 	}
 });
+
+Meteor.startup(function() {
+	console.log("Server started!")
+});

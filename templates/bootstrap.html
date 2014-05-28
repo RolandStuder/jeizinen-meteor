@@ -1,0 +1,21 @@
+<template name="bootstrapInput">
+	<div class="form-group">
+		<label for="{{fieldName}}" class="control-label col-sm-{{labelWidth}}">{{label}}</label>
+		<div class="col-sm-{{inputWidth}}">
+			<input name="{{fieldName}}" id="{{fieldName}}" class="form-control" value="{{fieldValue}}">
+		</div>
+	</div>
+</template>
+
+<template name="bootstrapSelect">
+	<div class="form-group">
+		<label for="{{fieldName}}" class="control-label col-sm-{{labelWidth}}">{{label}}</label>
+		<div class="col-sm-{{inputWidth}}">
+			<select name="{{fieldName}}" class="form-control">
+				{{#each options}}
+					<option {{this.selected}}>{{this.value}}</option>
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</template>

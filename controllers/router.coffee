@@ -1,19 +1,37 @@
 # wildcard router takes path in the form of layoutname/context1.context2.templateName
 
-Meteor.Router.add "public": ->
+# Meteor.Router.add "public": ->
+
+# Meteor.Router.beforeRouting = ->
+#   filesImported = Session.get "filesImported"
+#   unless filesImported?
+#     Collections.importDataFromFiles() 
+#   Session.set "filesImported", true
+
+@path = {}
   
+Router.map ->
+  this.route 'allRoutes',
+    path: '*'
+    layoutTemplate: 'layout'
+    action: ->
+      path = parse(this.path)
+      paramsToSession()
 
+      FlashMessages.clear()
+      FlashMessages.load()
 
-Meteor.Router.add "*": ->
-  path = parse(@pathname)
-  paramsToSession()
+      Jeizinen.log "Navigation: showing template '#{path["page"]}' with layout '#{path["layout"]}'"
+      Jeizinen.log "links pointing to #{path.sections} get the class active"
+      
+      this.router.layout path["layout"]
+      this.render(path["page"])
+      window.setTimeout (->
+        addActiveClassToLinks path['sections']
+        replaceImagePlaceholders()
+        return
+      ), 0 # for some reason, I does not work without a TimeOut, probably some concurrency issue.
 
-  FlashMessages.clear()
-  FlashMessages.load()
-
-  Session.set "currentPage", path["page"]
-  Session.set "currentLayout", path["layout"]
-  Session.set "currentSections", path["sections"]
 
 paramsToSession = ->
   for param in window.location.search.substring(1).split('&')
@@ -24,44 +42,27 @@ paramsToSession = ->
 parse = (path) -> 
   path = path.split("/") 
   path.shift()
-
   sections  = if path[path.length-1] then path[path.length-1] else "index"
   sections = sections.split(".")
-
   page = sections[sections.length - 1]
-  page = "notFound"  unless Template[page]
-  
-  layout = if path[path.length-2] then path[path.length-2] else "renderPage"
-  layout = "renderPage" unless Template[layout]
-
+  unless Template[page]
+    Jeizinen.error "#{page}: no such template"
+    page = "notFound"  
+  layout = if path[path.length-2] then path[path.length-2] else "layout"
+  unless Template[layout]
+    Jeizinen.error "#{layout}: no such layout"
+    layout = "jEmptyLayout" 
   page: page
   layout: layout
   sections: sections
 
 
-error = (message) ->
-  console.log                     "JEIZINEN ERROR: " + message
-  FlashMessages.display "danger", "JEIZINEN ERROR: " + message
-  FlashMessages.send    "danger", "JEIZINEN ERROR: " + message
-
-# Jeizinen provides two empty templates that can render any layout/template
-Meteor.startup ->
-  Template.renderLayout.content = ->
-    new Handlebars.SafeString(Template[Session.get("currentLayout")]())
-
-  Template.renderPage.content = ->
-    new Handlebars.SafeString(Template[Session.get("currentPage")]())
-
-  Template.renderPage.rendered = ->
-    addActiveClassToLinks()
-    replaceImagePlaceholders()
-
-addActiveClassToLinks = ->
+addActiveClassToLinks = (currentSections) ->
   $(".nav > li").removeClass "active"
   $("a").removeClass("active").each ->
     if $(this).attr("href")
       sections = $(this).attr("href").split(".")
       target = sections[sections.length - 1].replace '/', ''
-      if $.inArray(target, Session.get("currentSections")) >= 0
+      if $.inArray(target, currentSections) >= 0
         $(this).addClass "active"
         $(this).parents(".nav > li").addClass "active"

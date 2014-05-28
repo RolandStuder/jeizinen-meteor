@@ -2,9 +2,13 @@
 # warning will only work within templates...
 
 # COLLECTION CONTROLLER
-
-
 @Collections = new Meteor.Collection("Collection")
+
+# @newCollection = new Meteor.Collection('newCollection')
+# newCollection.insert({description: "I don't get it!"})
+
+# importing datasets from files
+
 
 Collections.create = (name) ->
   newCollection = {}
@@ -12,7 +16,7 @@ Collections.create = (name) ->
     unless Collections[name]  
       newCollection[name] = new Meteor.Collection(null)  unless Collections[name]
       _.extend Collections, newCollection
-      console.log "created: " + name
+      # console.log "created: " + name
 
 Collections.insert = (collection, data, amount) -> # use custom insert so mock helper, knows which collection the item belongs to
   Collections.create collection unless Collections[collection]
@@ -29,19 +33,38 @@ Collections.initialize = (name,amount,context) ->
     Collections.create name
     if Collections[name].find().count() is 0
       Collections.insert name, {context: context}, amount
-    if Collections[name].find({'context._id': context._id}).count() is 0
-      Collections.insert name, {context: context}, amount 
+    # if Collections[name].find({'context._id': context._id}).count() is 0
+    #   Collections.insert name, {context: context}, amount 
 
-Collections.updateDoc = (document,form) ->
+Collections.createDoc = (form) ->
   inputs = $(form).find("input[name]")
-  data = {}
-  Collections.create document.collection
-  collection = Collections[document.collection]
+  name = $(form).attr("data-collection")
+  data = {collection: name}
+  Collections.create name
+  collection = Collections[name]
   inputs.each () ->
     data[ $(this).attr("name") ] = $(this).val()
-  if collection.findOne(document._id)
-    collection.update document._id, $set: data
-  # Session.set 'currentDocument', Collections[document.collection].findOne(document._id)
+  newDocument = Collections.insert name, data
+  # Session.set 'currentDocument', Collections[name].findOne(newDocument)
+
+
+Collections.updateDoc = (document,form) ->
+  data = getDataFromForm form
+  if Collections[document.collection].findOne(document._id)
+    Collections[document.collection].update document._id, $set: data
+# Session.set 'currentDocument', Collections[document.collection].findOne(document._id)
+
+getDataFromForm = (form) ->
+  data = {}
+  inputs = $(form).find("input[name]")
+  inputs.each () ->
+    data[ $(this).attr("name") ] = $(this).val()
+  selects = $(form).find("select[name]")
+  selects.each () ->
+    data[$(this).attr("name")] = $(this).find(":selected").text()
+  return data
+
+
 
 Collections.toggleBoolean = (document, field) ->
   data = {}
@@ -68,16 +91,15 @@ Collections.setAllBoolean = (collection, field, value, context) ->
     ids.push(item._id)
   Collections[collection].update({_id: {$in: ids}}, $set: data, {multi:true});
 
-Collections.createDoc = (form) ->
-  inputs = $(form).find("input[name]")
-  name = $(form).attr("data-collection")
-  data = {collection: name}
-  Collections.create name
-  collection = Collections[name]
-  inputs.each () ->
-    data[ $(this).attr("name") ] = $(this).val()
-  newDocument = Collections.insert name, data
-  # Session.set 'currentDocument', Collections[name].findOne(newDocument)
+
+Collections.delayedUpdate = (name,id,data) ->
+  window.setTimeout (->
+    Collections[name].update id, {$set: data}
+    return
+  ), 0 
+  # I have to delay the update, because otherwise somehow I trouble with the template
+  # this creates new problems as the forms actually create their own data, so there is a conflict 
+
 
 # HELPER METHODS
 
@@ -94,70 +116,68 @@ Collections.execObjectFunctions = (obj) ->
 # HANDLEBARS HELPERS
 
 
+UI.registerHelper "collection", (options) ->
+  Collections.initialize this.name, this.create
+  if this._id #if there is a surrounding context, only find elements with that context
+    parent = Collections[this.collection].findOne(this._id)
+    this.objectsArray = Collections[this.name].find({},sort: name: 1)
+  else 
+    this.objectsArray = Collections[this.name].find({},sort: name: 1)
 
-if Meteor.isClient
-  Handlebars.registerHelper "collection", (options) ->
-    name = options.hash['name']
-    Collections.initialize name, options.hash['create'], this
-    result = ""
-    if this._id #if there is a surrounding context, only find element with that context
-      parent = Collections[this.collection].findOne(this._id)
-      Collections[name].find({'context._id': this._id}).forEach (item) ->
-        item.parent = parent
-        result += options.fn(item)
-    else 
-      Collections[name].find({},sort: createdAt: -1).forEach (item) ->
-        result += options.fn(item)
-    result
+  
+  
+  return Template.jCollection
+  # Collections.initialize this.name, this.create, this.object #todo: this does not refer to the current object anymore, so where to i get the context?
+  # result = ""
+  # result
 
-  Handlebars.registerHelper "document", (options) -> #BUG: does not rerender on documentChange 
-    currentDocument = Session.get('currentDocument.'+options.hash['collection'])
-    name = options.hash['collection']
-    Collections.initialize options.hash['collection'],options.hash['create'], this
-    if currentDocument
-      currentDocumentObj = Collections[name].findOne(currentDocument._id)
-      if currentDocumentObj.context
-        currentDocument.parent = Collections[currentDocument.context.collection].findOne(currentDocument.context._id)
-      options.fn(currentDocument)
-    else
-      options.fn(Collections[name].findOne())
+UI.registerHelper "document", () -> #BUG: does not rerender on documentChange 
+  currentDocument = Session.get('currentDocument.'+this.colleciton)
+  name = this.collection
+  Collections.initialize this.collection, this.create, this
+  if currentDocument
+    if currentDocument.context
+      currentDocument.parent = Collections[currentDocument.context.collection].findOne(currentDocument.context._id)
+    return Template.jDocument
+  else
+    object = Collections[name].findOne()
+    
+    return Template.jDocument
 
-  Handlebars.registerHelper "field", (field, options) ->
-    if @_id
-      name = this.collection
-      data = {}
-      if this[field]
-        data[field] = this[field]
-      else if options.hash['random']
-        data[field] = random(options.hash['random'],options.hash)
-        Collections[name].update @_id,{$set: data}
-      else if options.hash['pick'] 
-        data[field] = pick options.hash['pick']
-        Collections[name].update @_id,{$set: data}
-      else
-        data[field] = random(field)
-        Collections[name].update @_id,{$set: data}
-      data[field]
+UI.registerHelper "field", (options) ->
+  field = options.hash.name
+  name = this.collection
+  # if @_id #i don't remeber what this is for..., but with the update @_id is no longer defined
+  data = {}
+  if this[field]
+    data[field] = this[field]
+  else if options.hash['random']
+    data[field] = random(options.hash['random'],options.hash)
+    Collections.delayedUpdate name, @_id,data
+  else if options.hash['pick'] 
+    data[field] = pick options.hash['pick']
+    Collections.delayedUpdate name, @_id,data
+  data[field]
 
-  Handlebars.registerHelper "count", (collection, field) -> #counts ocurrances in subcollection
-    if Collections[collection]
-      query = {}
-      query[field] = true 
-      query['context._id'] = this._id
-      Collections[collection].find(query).count()
-    else
-      0
+UI.registerHelper "count", (collection, field) -> #counts ocurrances in subcollection
+  if Collections[collection]
+    query = {}
+    query[field] = true 
+    query['context._id'] = this._id
+    Collections[collection].find(query).count()
+  else
+    0
 
-  Handlebars.registerHelper "equal", (a,b) ->
-    if a is b then true else false
+UI.registerHelper "equal", (a,b) ->
+  if a is b then true else false
 
-  Handlebars.registerHelper "setAll", (collection, field, value) ->
-    result = ' data-set-field=' + field
-    result += ' data-set-collection=' + collection
-    result += ' data-set-value=' + value
+UI.registerHelper "setAll", (collection, field, value) ->
+  result = ' data-set-field=' + field
+  result += ' data-set-collection=' + collection
+  result += ' data-set-value=' + value
 
-  Handlebars.registerHelper "setAllBoolean", (collection, field, value) ->
-    result = ' data-set-field-boolean=' + field
-    result += ' data-set-collection=' + collection
-    result += ' data-set-value=' + value
+UI.registerHelper "setAllBoolean", (collection, field, value) ->
+  result = ' data-set-field-boolean=' + field
+  result += ' data-set-collection=' + collection
+  result += ' data-set-value=' + value
 
