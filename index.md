@@ -16,29 +16,28 @@ This is an early alpha version, documentation may not be up to date!
 <a name="Pages &amp; Layout"> </a> 
 ## Pages and layout
 
-In one html-file you define the layout, for example you create a `_layout.html`
+In one html file you create the layout template that is shared by all pages
 
-	<html>
-		<head><title>Apptitle</title></head>
-		<body>
-			<h1>MyApp</h1>
-			{{> renderPage}}
-		</body>
-	<html>
+	<template name="layout">
+	   <h1>Your Prototype</h1>
+	   {{> yield}}
+	</template>
 
-Now you can enter or link any URL like `localhost:3000/myTemplate`and Jeizinen will try to render a template with that name...
+Now you can enter or link any URL like `localhost:3000/myTemplate` and Jeizinen will try to render a template with that name...
 
 A template looks like this
 
 	<template name="myTemplate">
 		... some content ...
+		{{> anyOtherTemplate}}
 	</template>
 
 Now just start creating templates and link to them with regular links. You can nest templates within templates by using `{{> anyTemplateName }}`.
 
 This way you can easily create multiple pages and components like navigation bars...
 
-### multiple layouts
+<!-- Wait for bug from iron router to resolve: https://github.com/EventedMind/iron-router/issues/606 -->
+<!-- ### multiple layouts 
 
 You can use multiple layouts:
 	
@@ -51,7 +50,7 @@ In your main `html` put {{> renderLayout}} instead of {{> renderPage }}. Then cr
 
 Now you can navigate to page like `/layoutName/pageName` and the template (pageName) will be surrounded by the layout (layoutName).
 
-Note: You cannot render a layout without a template.
+Note: You cannot render a layout without a template. -->
 
 ### Automatically get .active on links
 
@@ -83,22 +82,52 @@ more to come... (dates, birthdays)
 
 Will return one of the comma-separated options.
 
-## lists of objects with random data
+## working with data
 
-You can create sets of datas, called collections, and can use them in your views without defining them beforehand. For example you can create a list of people like this:
+You can use sets of datas, called collection. You can either import data via a CSV or YAML file or you just create random data directly in your views.
 
-	{{#collection name='people' create='10'}}
-		{{field 'name'}}
-	{{/collection}}
+### creating data directly in a template
 
-This will output a list of 10 names. **This data is saved and will not change, if you switch between pages.** However if you reload a page, the collections are reset.
-
-If you use on the options that work for the random helper, it automatically returns a random value. More possibilities are available:
+You can create collections directly in your templates without defining them beforehand. For example you can create a list of people like this:
 
 	{{#collection name='people' create='10'}}
-		{{field 'name' random="firstName"}} // will give you a random first name
-		{{field 'category' pick="a,b,c"}} // will return a random pick
+		{{field name='name' random="name"}}<br> // will give you a random first name
+		{{field name='category' pick="friend,family"}} // will return a random pick
 	{{/collection}}
+
+This will output a list of 10 names (only if you assign it a random or a pick attribute). **This data is saved and will not change, if you switch between pages.** However if you reload a page, the collections are reset.
+
+<a name="importData"> </a>
+### adding data with CSV or YAML files
+
+Any CSV or YAML you put in the directory `public/data` will be read and put into a collection. For example if you put a file `csvImport.csv` in that folder. You will be able to use its data from a template with the `#{{collection}}`-helper with the filename of the CSV (without the extension). Any data of any column can now be used within that wrapper (do not use spaces or special characters in the columns names though).
+
+	{{#collection name="csvImport"}}
+		{{columnName}} // no need for field name="columnname" if the data already exists
+		{{field name="notInCSV" pick="0,1"}} // you can mix existing data, with newly created random data.
+	{{/collection}}
+
+### going from a list to a detail view
+
+Of course sometimes we just want to see one entry of a list. You do this by using the wrapper '{{#document}}'. Any link that is clicked in a collection-helper automatically sets a hidden session variable, that the clicked element is the current element. So you can link to a detail page and it will automatically show the correct document.
+
+	{{#document collection="csvImport"}}
+		{{columnName}} //works just like in the collection 
+	{{/collection}}
+
+
+### editing an entry
+
+By putting a `form` in a document or collection wrapper, you can update the model automatically. 
+
+	{{#document collection="csvImport"}}
+		<form>
+			<input name="columnName" value="{{columnname}}"> //the input field must have the same name as the field that sould be updated
+			<input type="Submit" href="index"> // the form ignores the action, so you instead set an href on the input.
+		</form>
+	{{/collection}}
+
+
 
 <a name="Image Placeholders"> </a> 		
 ## add placeholder images from flickr
@@ -107,8 +136,9 @@ If you use on the options that work for the random helper, it automatically retu
 
 Image tags with the attribute `data-search` will automatically point to a flickr image that fits the search string.
 
-If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
-
+<!-- I think this currently does not work -->
+<!-- If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
+ -->
 <a name="Flash Messages"> </a> 		
 ## Flash Messages
 
