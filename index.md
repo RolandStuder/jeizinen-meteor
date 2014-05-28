@@ -169,10 +169,6 @@ When you click on this link, it will show:
 - In your Meteor App create `smart.json` in the root directory to something like
 
 		{
-		  "meteor": {
-		    "git": "https://github.com/meteor/meteor.git",
-		    "branch": "master"
-		  },
 		  "packages": {
 		  	"jeizinen": {
 		  		"git": "https://github.com/RolandStuder/jeizinen-meteor.git"
@@ -180,6 +176,7 @@ When you click on this link, it will show:
 		  }
 		}
 
+- run command `jeizinen`
 - recommended: run command `mrt add bootstrap-3`
 - run the command `mrt`
 - point your browser to `localhost:3000`
