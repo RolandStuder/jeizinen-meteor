@@ -160,7 +160,8 @@ When you click on this link, it will show:
 
 <a name="Get Started"> </a>
 
-## To get started...
+## To get started…
+
 
 - Install [Meteor.js](http://meteor.com)
 - Install [Meteorite](https://github.com/oortcloud/meteorite).
