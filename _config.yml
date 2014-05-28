@@ -2,3 +2,4 @@ baseurl: /jeizinen-meteor
 name: UI Prototyper (Jeizinen)
 description: UI Prototyper enables people with basic HTML/CSS/Javascript skills to quickly create highly interactive prototypes for web applications.
 url: http://rolandstuder.github.io/jeizinen-meteor
+markdown: kramdown
