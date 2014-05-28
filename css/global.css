@@ -6,13 +6,15 @@ body, h1, h2, h3, h4, h5, h6, th, td { font-family: 'Muli', sans-serif; }
 }
 
 h1 {
-
+	font-size: 1.5em;
 }
 
 h1 small {
-	white-space: nowrap;
+	font-size: 70%;
 }
-
+#content {
+	margin-top: 20px;
+}
 
 .header a.active {
 	color: black;
@@ -58,20 +60,22 @@ a.anchor-link:hover {
 	text-decoration: none;
 }
 
-/* fix for weird webkit bug: http://stackoverflow.com/questions/14493533/really-weird-redraw-behavior-with-anchor-links-twitter-bootstrap-fixed-navbar */
-.affix,.navbar-fixed-top{
-	-webkit-transform: scale3d(1,1,1);
+nav ul.affix-top {
+    position: relative;
 }
 
-@media(max-width:767px){
-	.affix {
-		position: static;
-		width: auto;
-		top: 0;
-		margin: 20px 0px 20px 0px;
-	}
+nav ul.affix {
+    position: fixed; 
+    top: 10px;
+}
+nav ul.affix-bottom {
+    position: absolute;
 }
 
+@media (max-width: 768px) {
+	nav ul.affix {display: none;}
+}
+	
 
 #autoNavigation ul li a {
 	padding: 3px;

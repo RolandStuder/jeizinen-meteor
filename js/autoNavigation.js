@@ -16,4 +16,12 @@ $(document).ready(function() {
 		$('#blog').addClass("active")
 	}
 
+	$('#nav').affix({
+	      offset: {
+	        top: $('.header').height()
+	      }
+	}); 
+	$('body').scrollspy({ target: '#autoNavigation' })
+
+
 });

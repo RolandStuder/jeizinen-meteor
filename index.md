@@ -13,7 +13,8 @@ Jeiziner is a meteorite package for [Meteor.js](http://meteor.com). Not publishe
 This is an early alpha version, documentation may not be up to date!
 </div>
 
-<a name="Pages &amp; Layout"> </a> 
+<a name="Layout" id="Layout"> </a>
+
 ## Pages and layout
 
 In one html file you create the layout template that is shared by all pages
@@ -23,7 +24,7 @@ In one html file you create the layout template that is shared by all pages
 	   {{> yield}}
 	</template>
 
-Now you can enter or link any URL like `localhost:3000/myTemplate` and Jeizinen will try to render a template with that name...
+Now you can enter or link any URL like `localhost:3000/myTemplate` and Jeizinen will try to render a template with that name.
 
 A template looks like this
 
@@ -63,6 +64,7 @@ If you have a navigation with multiple levels, then you can set parent sections 
 When going to /documents.someTemplate `someTemplate` will be rendered and links pointing to `someTemplate` and links pointing to `documents` will get the .active class.
 
 <a name="Mockdata"> </a> 
+
 ## random data like names and phonenumbers
 
 	{{random 'name'}}
@@ -98,6 +100,7 @@ You can create collections directly in your templates without defining them befo
 This will output a list of 10 names (only if you assign it a random or a pick attribute). **This data is saved and will not change, if you switch between pages.** However if you reload a page, the collections are reset.
 
 <a name="importData"> </a>
+
 ### adding data with CSV or YAML files
 
 Any CSV or YAML you put in the directory `public/data` will be read and put into a collection. For example if you put a file `csvImport.csv` in that folder. You will be able to use its data from a template with the `#{{collection}}`-helper with the filename of the CSV (without the extension). Any data of any column can now be used within that wrapper (do not use spaces or special characters in the columns names though).
@@ -129,7 +132,8 @@ By putting a `form` in a document or collection wrapper, you can update the mode
 
 
 
-<a name="Image Placeholders"> </a> 		
+<a name="Image Placeholders"> </a> 	
+
 ## add placeholder images from flickr
 
 	<img data-search="dolphins">
@@ -140,6 +144,7 @@ Image tags with the attribute `data-search` will automatically point to a flickr
 <!-- If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
  -->
 <a name="Flash Messages"> </a> 		
+
 ## Flash Messages
 
 If you include the `{{> flashMessages }}`-template somehwere you can display messages.
@@ -154,6 +159,7 @@ When you click on this link, it will show:
 <div class="alert alert-success">This is good!</div>
 
 <a name="Get Started"> </a>
+
 ## To get started...
 
 - Install [Meteor.js](http://meteor.com)
