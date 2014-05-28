@@ -131,18 +131,19 @@ UI.registerHelper "collection", (options) ->
   # result = ""
   # result
 
-UI.registerHelper "document", () -> #BUG: does not rerender on documentChange 
-  currentDocument = Session.get('currentDocument.'+this.colleciton)
+UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, maybe because Session is dynamic...
+  currentDocument = Session.get('currentDocument.'+this.collection)
   name = this.collection
+  object = currentDocument
   Collections.initialize this.collection, this.create, this
   if currentDocument
     if currentDocument.context
       currentDocument.parent = Collections[currentDocument.context.collection].findOne(currentDocument.context._id)
-    return Template.jDocument
   else
     object = Collections[name].findOne()
-    
-    return Template.jDocument
+
+  this.object = object
+  return Template.jDocument
 
 UI.registerHelper "field", (options) ->
   field = options.hash.name

@@ -12,6 +12,7 @@ if Meteor.isClient
     Collections.create collection.collection
     for item in collection.data
       data = {}
+      item.collection = collection.collection
       Collections[collection.collection].insert(item)
     console.log "IMPORT: imported #{collection.data.length} items from #{collection.source}"
 
@@ -26,18 +27,19 @@ if Meteor.isServer
 
 	Meteor.startup ->
 		importedCollections.remove({})
-		filenames = fs.readdirSync '../client/app/data'
-		console.log "Preparing for import by client: " + filenames
-		
-		for filename in filenames
-			do (filename) ->
-				filename = splitFileName(filename)
-				if filename.extension is "csv"
-					importCSV filename
-				else if filename.extension is "yaml" or filename.extension is "yml"
-					importYAML filename
-				else
-					console.error "Filetype ." + filename.extension + " is not supported. Supported types: csv, yaml, yml"
+		fs.exists '../client/app/data', (exists) ->
+			if exists
+				filenames = fs.readdirSync '../client/app/data'
+				console.log "Preparing for import by client: " + filenames
+				for filename in filenames
+					do (filename) ->
+						filename = splitFileName(filename)
+						if filename.extension is "csv"
+							importCSV filename
+						else if filename.extension is "yaml" or filename.extension is "yml"
+							importYAML filename
+						else
+							console.error "Filetype ." + filename.extension + " is not supported. Supported types: csv, yaml, yml"
 
 	importCSV = (filename) ->
 		csvConverter = new csvtojson.core.Converter()
@@ -50,13 +52,16 @@ if Meteor.isServer
 
 
 	importYAML = (filename) ->
-		jsonObjectWithKeys = YAML.load "../client/app/data/" + filename.full
-		jsonArray = []
-		for key of jsonObjectWithKeys
-			item = jsonObjectWithKeys[key]
-			item.importedKey = key
-			jsonArray.push item
-		importedCollections.insert({collection: filename.name, source: filename.full, data: jsonArray})
+		Fibers(->
+			jsonObjectWithKeys = YAML.load "../client/app/data/" + filename.full
+			jsonArray = []
+			for key of jsonObjectWithKeys
+				item = jsonObjectWithKeys[key]
+				item.importedKey = key
+				jsonArray.push item
+			importedCollections.insert({collection: filename.name, source: filename.full, data: jsonArray})
+
+		).run()
 
 splitFileName = (filename) ->
 	#splits filename into name and extension

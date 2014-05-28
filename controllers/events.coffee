@@ -12,7 +12,8 @@ Meteor.startup ->
             ), 1000
 
         "click a": (event) ->
-            # console.log 'current document for ' +  this.collection
+            # console.log 'current document for ' +  this.collection$
+            console.log this
             if this.collection
                 Session.set('currentDocument.'+this.collection ,this)
 
