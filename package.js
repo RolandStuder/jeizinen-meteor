@@ -14,7 +14,6 @@ Package.on_use(function (api, where) {
     server   = ['server'];
 
     api.use('templating', client);
-	api.use('csv-to-collection', both);
     api.use('jquery', both);
     api.use('iron-router', 'client');
     api.use('underscore', both);
