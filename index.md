@@ -176,7 +176,7 @@ When you click on this link, it will show:
 		  }
 		}
 
-- run command `jeizinen`
+- run command `mrt add jeizinen`
 - recommended: run command `mrt add bootstrap-3`
 - run the command `mrt`
 - point your browser to `localhost:3000`
