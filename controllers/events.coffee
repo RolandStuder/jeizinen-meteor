@@ -51,6 +51,19 @@ Meteor.startup ->
             value = $(event.currentTarget).attr('data-set-value')
             Collections.setAllBoolean collection, field, value, this
 
+        "click [data-filter-for]": (event) ->
+            collection = $(event.currentTarget).attr('data-filter-for')
+            field = $(event.currentTarget).attr('data-filter-field')
+            value = $(event.currentTarget).attr('data-filter-value')
+            if value == ""
+                value = undefined
+            filters = Session.get "filters"
+            if typeof filters == "undefined"
+                filters = {}
+                filters[collection] = {}  
+            filters[collection][field] = value
+            Session.set "filters", filters
+
     Session['toggle'] = (name) ->
         value = Session.get(name)
         if value == true

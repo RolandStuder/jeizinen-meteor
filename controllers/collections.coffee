@@ -116,17 +116,25 @@ Collections.execObjectFunctions = (obj) ->
 # HANDLEBARS HELPERS
 
 
-UI.registerHelper "collection", (options) ->
+UI.registerHelper "collection", () ->
   Collections.initialize this.name, this.create
-  if this._id #if there is a surrounding context, only find elements with that context
+  filters = Session.get("filters")
+  console.log filters
+  if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
+    query = filters[this.name]
+  else
+    query = {}
+  console.log query
+  if !query 
+    query = {}
+  if this._id #if there is a surrounding context, only find elements with that context !! this obviously doesn work currently
     parent = Collections[this.collection].findOne(this._id)
     this.objectsArray = Collections[this.name].find({},sort: name: 1)
   else 
-    this.objectsArray = Collections[this.name].find({},sort: name: 1)
-
-  
-  
-  return Template.jCollection
+    this.objectsArray = Collections[this.name].find(query,sort: name: 1)
+  Template.jCollection.extend render: ->
+    Session.get 'filters'
+    return Template.jCollection.render.apply this, arguments
   # Collections.initialize this.name, this.create, this.object #todo: this does not refer to the current object anymore, so where to i get the context?
   # result = ""
   # result

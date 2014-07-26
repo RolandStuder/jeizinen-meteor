@@ -6,6 +6,14 @@ UI.registerHelper "repeat", (n, block) ->
     ++i
   accum
 
+UI.registerHelper "filter", (options) ->
+  attributes  =
+    "data-filter-for": options.hash["collection"]
+    "data-filter-field": options.hash["field"]
+    "data-filter-value": options.hash["value"]
+  return attributes
+    
+
 UI.registerHelper "animate", (animation) ->
   return "style=\"#{animation}\""
 
