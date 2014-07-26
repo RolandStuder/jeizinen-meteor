@@ -12,8 +12,32 @@ h1 {
 h1 small {
 	font-size: 70%;
 }
-#content {
+
+.lead {
+	color: white;
+	background-color: black;
+	background-image: url(https://farm9.staticflickr.com/8370/8364390230_8605b99f59_b_d.jpg)
+}
+
+
+.container {
 	margin-top: 20px;
+	position: relative;
+}
+
+#sidebar {
+	width: 20%;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+#content {
+	position: absolute;
+	right: 0;
+	width: 70%;
 }
 
 .header a.active {
@@ -22,6 +46,10 @@ h1 small {
 
 .header {
 	/*padding: 5px !important;*/
+}
+
+.footer {
+	border-top: 1px solid #ccc
 }
 
 .nav-primary {
@@ -77,9 +105,26 @@ nav ul.affix-bottom {
 }
 	
 
-#autoNavigation ul li a {
+#tableOfContents ul li a {
 	padding: 3px;
 }
+
+
+#tableOfContents ul.nav { /*first Nav level*/
+	font-size: 1.1em;
+}
+#tableOfContents ul.nav ul.nav { /*second Nav level*/
+	margin-left: 10px;
+	font-size: 0.9em;
+
+}
+
+#tableOfContents ul.nav ul.nav ul.nav { /*third Nav level*/
+	margin-left: 20px;
+}
+
+
+
 
 .container-post h2 {
 	margin-top: 0em;

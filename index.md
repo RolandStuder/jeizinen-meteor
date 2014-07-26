@@ -4,18 +4,17 @@ title: Docs
 ---
 
 {%raw %}
-<div class="lead">
-A javascript prototyping framework to quickly create  highly interactive UI prototypes.
+<div class="lead jumbotron">
+<h2>Jeizinen UI Prototyper</h2>
+A javascript prototyping framework to quickly create  highly interactive UI prototypes for webapplications.
 </div>
-Jeiziner is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
+Jeizinen is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
 
 <div class="alert alert-warning">
 This is an early alpha version, documentation may not be up to date!
 </div>
 
-<a name="Layout" id="Layout"> </a>
-
-## Pages and layout
+## Templates
 
 In one html file you create the layout template that is shared by all pages
 
@@ -53,7 +52,7 @@ Now you can navigate to page like `/layoutName/pageName` and the template (pageN
 
 Note: You cannot render a layout without a template. -->
 
-### Automatically get .active on links
+### Navigation
 
 All links to the current page, get the css class `.active`, also links within Bootstrap navigation elements are automatically set to `.active`.
 
@@ -63,9 +62,7 @@ If you have a navigation with multiple levels, then you can set parent sections 
 
 When going to /documents.someTemplate `someTemplate` will be rendered and links pointing to `someTemplate` and links pointing to `documents` will get the .active class.
 
-<a name="Mockdata"> </a> 
-
-## random data like names and phonenumbers
+## Data
 
 	{{random 'name'}}
 
@@ -78,17 +75,17 @@ Will return a random combinations of a first name and a family name. Other optio
 
 more to come... (dates, birthdays)
 
-### random pick of a list defined by yourself
+### Pick
 
 	{{pick 'The Alliance, The Rebels, Neutral'}}
 
 Will return one of the comma-separated options.
 
-## working with data
+## Creating data
 
 You can use sets of datas, called collection. You can either import data via a CSV or YAML file or you just create random data directly in your views.
 
-### creating data directly in a template
+### in a template
 
 You can create collections directly in your templates without defining them beforehand. For example you can create a list of people like this:
 
@@ -99,18 +96,19 @@ You can create collections directly in your templates without defining them befo
 
 This will output a list of 10 names (only if you assign it a random or a pick attribute). **This data is saved and will not change, if you switch between pages.** However if you reload a page, the collections are reset.
 
+
 <a name="importData"> </a>
 
-### adding data with CSV or YAML files
+### with CSV or YAML files
 
-Any CSV or YAML you put in the directory `public/data` will be read and put into a collection. For example if you put a file `csvImport.csv` in that folder. You will be able to use its data from a template with the `#{{collection}}`-helper with the filename of the CSV (without the extension). Any data of any column can now be used within that wrapper (do not use spaces or special characters in the columns names though).
+Any CSV or YAML you put in the directory `public/data` will be read and put into a collection. For example if you put a file like `people.csv` in that folder. You will be able to use its data from a template with the expresssion `#{{collection name="people"}}`. Any data of any column can now be used within that wrapper (do not use spaces or special characters in the columns names though).
 
 	{{#collection name="csvImport"}}
 		{{columnName}} // no need for field name="columnname" if the data already exists
 		{{field name="notInCSV" pick="0,1"}} // you can mix existing data, with newly created random data.
 	{{/collection}}
 
-### going from a list to a detail view
+### from a list to a detail view
 
 Of course sometimes we just want to see one entry of a list. You do this by using the wrapper '{{#document}}'. Any link that is clicked in a collection-helper automatically sets a hidden session variable, that the clicked element is the current element. So you can link to a detail page and it will automatically show the correct document.
 
@@ -119,7 +117,7 @@ Of course sometimes we just want to see one entry of a list. You do this by usin
 	{{/collection}}
 
 
-### editing an entry
+### changing data
 
 By putting a `form` in a document or collection wrapper, you can update the model automatically. 
 
@@ -132,9 +130,18 @@ By putting a `form` in a document or collection wrapper, you can update the mode
 
 
 
-<a name="Image Placeholders"> </a> 	
+<a name="filterCollections"> </a>
 
-## add placeholder images from flickr
+## Filtering Collections
+
+Filter a collection by using the `filter`-helper in a an html-element.
+
+	<a {{filter collection="collectionName" field="fieldName" value="string"}}
+
+If this element is clicked, the collection will be filtered by searching for documents that have the value "string" in the field "fieldname". The filtering will persists across page switches, to show all elements again you have to reset by filtering `value=""`.
+
+
+## Get images
 
 	<img data-search="dolphins">
 
@@ -150,7 +157,7 @@ Image tags with the attribute `data-search` will automatically point to a flickr
 If you include the `{{> flashMessages }}`-template somehwere you can display messages.
 Messages use the [bootstrap-3 alert-classes](http://getbootstrap.com/components/#alerts): just pass 'success', 'info' or 'danger' to style the message.
 
-#### via data attributes
+### via data attributes
 
 	<a href="..." data-flash-message="This is good!" data-flash-message-type="success">
 
@@ -158,10 +165,7 @@ When you click on this link, it will show:
 
 <div class="alert alert-success">This is good!</div>
 
-<a name="Get Started"> </a>
-
-## To get started…
-
+## Installing
 
 - Install [Meteor.js](http://meteor.com)
 - Install [Meteorite](https://github.com/oortcloud/meteorite).
