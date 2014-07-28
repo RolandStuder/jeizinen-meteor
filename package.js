@@ -6,7 +6,7 @@ Package.on_use(function (api, where) {
 
     Npm.depends({
         yamljs: "0.1.5",
-        csvtojson: "0.3.4"
+        csvtojson: "0.3.8"
     });
 	
     both   = ['client', 'server'];
