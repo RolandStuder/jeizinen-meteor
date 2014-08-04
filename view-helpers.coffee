@@ -1,10 +1,9 @@
-UI.registerHelper "repeat", (n, block) ->
-  accum = ""
-  i = 0
-  while i < n
-    accum += block.fn(i)
-    ++i
-  accum
+UI.registerHelper "repeat", (options) ->
+  this.array = []
+  this.array.push "" for [1..this.times]
+  if this.with
+    this.array = this.with.split(",")
+  return Template.jRepeat
 
 UI.registerHelper "filter", (options) ->
   attributes  =
@@ -12,7 +11,12 @@ UI.registerHelper "filter", (options) ->
     "data-filter-field": options.hash["field"]
     "data-filter-value": options.hash["value"]
   return attributes
-    
+
+UI.registerHelper "liveSearch", (options) ->
+  attributes =
+    "data-live-search-for": options.hash["collection"]
+    "data-live-search-field": options.hash["field"]
+  return attributes    
 
 UI.registerHelper "animate", (animation) ->
   return "style=\"#{animation}\""

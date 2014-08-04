@@ -119,12 +119,12 @@ Collections.execObjectFunctions = (obj) ->
 UI.registerHelper "collection", () ->
   Collections.initialize this.name, this.create
   filters = Session.get("filters")
-  console.log filters
   if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
     query = filters[this.name]
+    console.log query
+    query.name = new RegExp(query.name, "gi")
   else
     query = {}
-  console.log query
   if !query 
     query = {}
   if this._id #if there is a surrounding context, only find elements with that context !! this obviously doesn work currently
@@ -139,7 +139,7 @@ UI.registerHelper "collection", () ->
   # result = ""
   # result
 
-UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, maybe because Session is dynamic...
+UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, needs the same mechanism, as the collection helper
   currentDocument = Session.get('currentDocument.'+this.collection)
   name = this.collection
   object = currentDocument
@@ -168,11 +168,11 @@ UI.registerHelper "field", (options) ->
     Collections.delayedUpdate name, @_id,data
   data[field]
 
-UI.registerHelper "count", (collection, field) -> #counts ocurrances in subcollection
+UI.registerHelper "count", (collection, field, value) -> #counts ocurrances in subcollection
   if Collections[collection]
     query = {}
-    query[field] = true 
-    query['context._id'] = this._id
+    query[field] = value 
+    # query['context._id'] = this._id
     Collections[collection].find(query).count()
   else
     0

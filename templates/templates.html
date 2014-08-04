@@ -25,11 +25,17 @@
 </template>
 
 <template name="jDocument">
-	<div name="{{this.object._id}}" class="jDocumentWrapper">{{> UI.contentBlock this.object}}</div>
+	{{> UI.contentBlock this.object}}
 </template>
 
 <template name="jCollection">
 	{{#each this.objectsArray}}
-		<div name="{{this._id}}" class="jDocumentWrapper">{{> UI.contentBlock this}}</div>
+		{{> UI.contentBlock this}}
+	{{/each}}
+</template>
+
+<template name="jRepeat">
+    {{#each this.array}}
+		{{> UI.contentBlock this}}
 	{{/each}}
 </template>

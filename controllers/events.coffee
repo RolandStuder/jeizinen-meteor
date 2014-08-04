@@ -64,6 +64,21 @@ Meteor.startup ->
             filters[collection][field] = value
             Session.set "filters", filters
 
+        "keyup [data-live-search-for]": (event) ->
+            collection = $(event.currentTarget).attr('data-live-search-for')
+            field = $(event.currentTarget).attr('data-live-search-field')
+            value = $(event.currentTarget).val()
+            console.log value
+            if value == ""
+                value = undefined
+            filters = Session.get "filters"
+            if typeof filters == "undefined"
+                filters = {}
+                filters[collection] = {}  
+            filters[collection][field] = value
+            Session.set "filters", filters
+
+
     Session['toggle'] = (name) ->
         value = Session.get(name)
         if value == true

@@ -9,7 +9,10 @@
 #   Session.set "filesImported", true
 
 @path = {}
-  
+
+
+console.log "test"
+
 Router.map ->
   this.route 'allRoutes',
     path: '*'
@@ -22,7 +25,7 @@ Router.map ->
       FlashMessages.load()
 
       Jeizinen.log "Navigation: showing template '#{path["page"]}' with layout '#{path["layout"]}'"
-      Jeizinen.log "links pointing to #{path.sections} get the class active"
+      Jeizinen.log "links pointing to '#{path.sections}' get the class active"
       
       this.router.layout path["layout"]
       this.render(path["page"])
