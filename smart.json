@@ -7,6 +7,6 @@
     "git": "https://github.com/RolandStuder/jeizinen-meteor.git",
     "packages": {
     	"bootstrap-3": "",
-    	"iron-router": "0.7.1"
+    	"iron-router": ""
     }
 }

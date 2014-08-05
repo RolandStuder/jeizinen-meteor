@@ -119,22 +119,29 @@ Collections.execObjectFunctions = (obj) ->
 UI.registerHelper "collection", () ->
   Collections.initialize this.name, this.create
   filters = Session.get("filters")
+  searchFilters = Session.get("searchFilters")
   if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
     query = filters[this.name]
-    console.log query
-    query.name = new RegExp(query.name, "gi")
   else
     query = {}
-  if !query 
-    query = {}
+
+  if typeof searchFilters != "undefined"
+    searchQuery = searchFilters[this.name]
+    searchQuery.name = new RegExp(searchQuery.name, "gi")
+  else
+    searchQuery = {}
+
+
   if this._id #if there is a surrounding context, only find elements with that context !! this obviously doesn work currently
     parent = Collections[this.collection].findOne(this._id)
     this.objectsArray = Collections[this.name].find({},sort: name: 1)
   else 
-    this.objectsArray = Collections[this.name].find(query,sort: name: 1)
-  Template.jCollection.extend render: ->
+    this.objectsArray = Collections[this.name].find({$and: [query, searchQuery]},sort: name: 1)
+
+  Template.__create__ Template.jCollection.__viewName, ->
     Session.get 'filters'
-    return Template.jCollection.render.apply this, arguments
+    Session.get 'searchFilters'
+    return Template.jCollection.__render.apply this, arguments
   # Collections.initialize this.name, this.create, this.object #todo: this does not refer to the current object anymore, so where to i get the context?
   # result = ""
   # result

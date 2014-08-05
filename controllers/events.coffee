@@ -71,12 +71,12 @@ Meteor.startup ->
             console.log value
             if value == ""
                 value = undefined
-            filters = Session.get "filters"
+            filters = Session.get "searchFilters"
             if typeof filters == "undefined"
                 filters = {}
                 filters[collection] = {}  
             filters[collection][field] = value
-            Session.set "filters", filters
+            Session.set "searchFilters", filters
 
 
     Session['toggle'] = (name) ->
