@@ -122,7 +122,6 @@ UI.registerHelper "collection", () ->
   searchFilters = Session.get("searchFilters")
   if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
     query = filters[this.name]
-    console.log query
   else
     query = {}
 

@@ -1,13 +1,7 @@
 @importedCollections = new Meteor.Collection('importedCollections')
 
 if Meteor.isClient
-  handle = importedCollections.find({})
-  handle.observe
-    added: (collection) ->
-      createCollectionFromImport(collection)
 
-
-	
   createCollectionFromImport = (collection) ->
     Collections.create collection.collection
     for item in collection.data
@@ -15,6 +9,11 @@ if Meteor.isClient
       item.collection = collection.collection
       Collections[collection.collection].insert(item)
     console.log "IMPORT: imported #{collection.data.length} items from #{collection.source}"
+	
+  handle = importedCollections.find({})
+  handle.observe
+    added: (collection) ->
+      createCollectionFromImport(collection)
 
 
 
