@@ -68,7 +68,6 @@ Meteor.startup ->
             collection = $(event.currentTarget).attr('data-live-search-for')
             field = $(event.currentTarget).attr('data-live-search-field')
             value = $(event.currentTarget).val()
-            console.log value
             if value == ""
                 value = undefined
             filters = Session.get "searchFilters"

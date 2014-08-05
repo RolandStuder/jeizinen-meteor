@@ -122,12 +122,15 @@ UI.registerHelper "collection", () ->
   searchFilters = Session.get("searchFilters")
   if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
     query = filters[this.name]
+    console.log query
   else
     query = {}
 
+
   if typeof searchFilters != "undefined"
     searchQuery = searchFilters[this.name]
-    searchQuery.name = new RegExp(searchQuery.name, "gi")
+    for key,values of searchQuery
+      searchQuery[key] = new RegExp searchQuery[key], "gi"
   else
     searchQuery = {}
 
@@ -139,12 +142,9 @@ UI.registerHelper "collection", () ->
     this.objectsArray = Collections[this.name].find({$and: [query, searchQuery]},sort: name: 1)
 
   Template.__create__ Template.jCollection.__viewName, ->
-    Session.get 'filters'
     Session.get 'searchFilters'
+    Session.get 'filters'
     return Template.jCollection.__render.apply this, arguments
-  # Collections.initialize this.name, this.create, this.object #todo: this does not refer to the current object anymore, so where to i get the context?
-  # result = ""
-  # result
 
 UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, needs the same mechanism, as the collection helper
   currentDocument = Session.get('currentDocument.'+this.collection)
