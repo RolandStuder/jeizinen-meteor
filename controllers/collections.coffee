@@ -23,9 +23,10 @@ Collections.insert = (collection, data, amount) -> # use custom insert so mock h
   amount = 0 unless amount
   data["collection"] = collection
   data["createdAt"] = new Date().getTime()
-  for i in [1..amount]
-    insertData = Collections.execObjectFunctions(data)
-    Collections[collection].insert insertData
+  unless amount == 0
+    for i in [1..amount]
+      insertData = Collections.execObjectFunctions(data)
+      Collections[collection].insert insertData
 
 Collections.initialize = (name,amount,context) ->
   amount = 0 unless amount
