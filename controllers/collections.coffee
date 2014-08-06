@@ -119,6 +119,9 @@ Collections.execObjectFunctions = (obj) ->
 
 UI.registerHelper "collection", () ->
   Collections.initialize this.name, this.create
+  this.limit = 100 unless typeof this.limit != "undefined"
+  sortInstruction = {}
+  sortInstruction[this.sort] = 1
   filters = Session.get("filters")
   searchFilters = Session.get("searchFilters")
   if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
@@ -139,7 +142,7 @@ UI.registerHelper "collection", () ->
     parent = Collections[this.collection].findOne(this._id)
     this.objectsArray = Collections[this.name].find({},sort: name: 1)
   else 
-    this.objectsArray = Collections[this.name].find({$and: [query, searchQuery]},sort: name: 1)
+    this.objectsArray = Collections[this.name].find({$and: [query, searchQuery]}, {sort: sortInstruction, limit: this.limit })
 
   Template.__create__ Template.jCollection.__viewName, ->
     Session.get 'searchFilters'
