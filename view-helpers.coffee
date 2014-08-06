@@ -21,8 +21,19 @@ UI.registerHelper "liveSearch", (options) ->
 UI.registerHelper "animate", (animation) ->
   return "style=\"#{animation}\""
 
-UI.registerHelper "session", (input) ->
-  Session.get input
+UI.registerHelper "session", (input, defaultValue) ->
+  inputArray = input.split(".")
+  if inputArray.length > 1
+    output = Session.get inputArray[0]
+    inputArray.shift()
+    for part in inputArray
+      output = output[part]
+    if typeof output == "undefined"
+      return defaultValue
+    else
+      return output
+  else
+    return Session.get input
 
 UI.registerHelper "setTrue", (attr, id) ->
   "data-onClick-setTrue=\"" + attr + "\" data-id=\"" + id + "\""
