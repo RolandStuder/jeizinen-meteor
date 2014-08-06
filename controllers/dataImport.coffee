@@ -10,10 +10,11 @@ if Meteor.isClient
       Collections[collection.collection].insert(item)
     console.log "IMPORT: imported #{collection.data.length} items from #{collection.source}"
 	
-  handle = importedCollections.find({})
-  handle.observe
-    added: (collection) ->
-      createCollectionFromImport(collection)
+  Meteor.startup ->
+	  handle = importedCollections.find({})
+	  handle.observe
+	    added: (collection) ->
+	      createCollectionFromImport(collection)
 
 
 
