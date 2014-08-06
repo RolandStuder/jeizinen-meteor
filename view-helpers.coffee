@@ -27,13 +27,16 @@ UI.registerHelper "session", (input, defaultValue) ->
     output = Session.get inputArray[0]
     inputArray.shift()
     for part in inputArray
-      output = output[part]
-    if typeof output == "undefined"
-      return defaultValue
-    else
-      return output
+      if typeof output != "undefined"
+        output = output[part]
+      else
+        return defaultValue
+    return output
   else
-    return Session.get input
+    if typeof Session.get != "undefined"
+      return Session.get input
+    else
+      return defaultValue
 
 UI.registerHelper "setTrue", (attr, id) ->
   "data-onClick-setTrue=\"" + attr + "\" data-id=\"" + id + "\""
