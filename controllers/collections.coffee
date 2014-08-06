@@ -20,7 +20,7 @@ Collections.create = (name) ->
 
 Collections.insert = (collection, data, amount) -> # use custom insert so mock helper, knows which collection the item belongs to
   Collections.create collection unless Collections[collection]
-  amount = 1 unless amount
+  amount = 0 unless amount
   data["collection"] = collection
   data["createdAt"] = new Date().getTime()
   for i in [1..amount]
