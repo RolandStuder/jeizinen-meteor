@@ -132,17 +132,35 @@ UI.registerHelper "collection", () ->
 
   if typeof searchFilters != "undefined"
     searchQuery = searchFilters[this.name]
-    for key,values of searchQuery
-      searchQuery[key] = new RegExp searchQuery[key], "gi"
+    queryArray = []
+    # for key,values of searchQuery
+    #   searchQuery[key] = new RegExp searchQuery[key], "gi"
+
+    for key,value of searchQuery
+      fields = key.split(",")
+      for field in fields
+        obj = {}
+        obj[field] = new RegExp value, "i"
+        queryArray.push obj
+        console.log obj
   else
     searchQuery = {}
 
+  newSearchQuery = {}
+  if typeof queryArray != "undefined"
+    if queryArray.length > 0
+      newSearchQuery['$or'] = queryArray
+      console.log JSON.stringify newSearchQuery
+      console.log JSON.stringify query
+    else
+      newSearchQuery = {}
 
   if this._id #if there is a surrounding context, only find elements with that context !! this obviously doesn work currently
     parent = Collections[this.collection].findOne(this._id)
     this.objectsArray = Collections[this.name].find({},sort: name: 1)
   else 
-    this.objectsArray = Collections[this.name].find({$and: [query, searchQuery]}, {sort: sortInstruction, limit: this.limit })
+    this.objectsArray = Collections[this.name].find({$and: [query, newSearchQuery]}, {sort: sortInstruction, limit: this.limit })
+    # this.objectsArray = Collections[this.name].find({$and: [query, searchQuery]}, {sort: sortInstruction, limit: this.limit })
 
   Template.__create__ Template.jCollection.__viewName, ->
     Session.get 'searchFilters'
