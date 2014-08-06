@@ -2,19 +2,33 @@
 
 if Meteor.isClient
 
+  insertBulk = (collection, documents) ->
+    if collection
+      _.compact _.map(documents, (item) ->
+        if _.isObject(item)
+          _id = collection._makeNewID()
+          
+          # insert with reactivity only on the last item
+          if _.last(documents) is item
+            _id = collection.insert(item)
+          
+          # insert without reactivity
+          else
+            item._id = _id
+            collection._collection._docs._map[_id] = item
+          _id
+      )
+
   createCollectionFromImport = (collection) ->
     Collections.create collection.collection
-    for item in collection.data
-      data = {}
-      item.collection = collection.collection
-      Collections[collection.collection].insert(item)
+    insertBulk Collections[collection.collection], collection.data
     console.log "IMPORT: imported #{collection.data.length} items from #{collection.source}"
 	
-  Meteor.startup ->
-	  handle = importedCollections.find({})
-	  handle.observe
-	    added: (collection) ->
-	      createCollectionFromImport(collection)
+  handle = importedCollections.find({})
+  handle.observe
+    added: (collection) ->
+      createCollectionFromImport(collection)
+      console.log "import now"
 
 
 
