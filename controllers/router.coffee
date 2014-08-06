@@ -34,6 +34,8 @@ Router.map ->
         replaceImagePlaceholders()
         return
       ), 0 # for some reason, I does not work without a TimeOut, probably some concurrency issue.
+    waiton: ->
+      Meteor.subscribe("importedCollections")
 
 
 paramsToSession = ->

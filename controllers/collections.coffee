@@ -149,6 +149,7 @@ UI.registerHelper "collection", () ->
     Session.get 'filters'
     return Template.jCollection.__render.apply this, arguments
 
+
 UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, needs the same mechanism, as the collection helper
   currentDocument = Session.get('currentDocument.'+this.collection)
   name = this.collection
