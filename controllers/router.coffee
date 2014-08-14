@@ -30,7 +30,7 @@ Router.map ->
       this.router.layout path["layout"]
       this.render(path["page"])
       window.setTimeout (->
-        addActiveClassToLinks path['sections']
+        addActiveClassToLinks path['sections'], path['page']
         replaceImagePlaceholders()
         return
       ), 0 # for some reason, I does not work without a TimeOut, probably some concurrency issue.
@@ -47,27 +47,36 @@ paramsToSession = ->
 parse = (path) -> 
   path = path.split("/") 
   path.shift()
-  sections  = if path[path.length-1] then path[path.length-1] else "index"
+  sections = if path[path.length-1] then path[path.length-1] else "index"
   sections = sections.split(".")
   page = sections[sections.length - 1]
+  sections.pop()
   unless Template[page]
-    Jeizinen.error "#{page}: no such template"
+    Jeizinen.log "#{page}: no such template"
     page = "notFound"  
   layout = if path[path.length-2] then path[path.length-2] else "layout"
   unless Template[layout]
-    Jeizinen.error "#{layout}: no such layout"
+    Jeizinen.log "#{layout}: no such layout"
     layout = "jEmptyLayout" 
   page: page
   layout: layout
   sections: sections
 
 
-addActiveClassToLinks = (currentSections) ->
+addActiveClassToLinks = (currentSections, currentPage) ->
   $(".nav > li").removeClass "active"
   $("a").removeClass("active").each ->
-    if $(this).attr("href")
-      sections = $(this).attr("href").split(".")
-      target = sections[sections.length - 1].replace '/', ''
-      if $.inArray(target, currentSections) >= 0
+    href = $(this).attr("href")
+    if href
+      if shouldBeActive href, currentSections, currentPage
         $(this).addClass "active"
         $(this).parents(".nav > li").addClass "active"
+
+shouldBeActive = (href, currentSections, currentPage) ->
+  href = href.split(".")
+  targetPage = href[href.length-1].replace '/', ''
+  if targetPage == currentPage
+    return true
+  else
+    if $.inArray(targetPage, currentSections) >= 0
+      return true
