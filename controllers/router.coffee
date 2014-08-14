@@ -73,10 +73,16 @@ addActiveClassToLinks = (currentSections, currentPage) ->
         $(this).parents(".nav > li").addClass "active"
 
 shouldBeActive = (href, currentSections, currentPage) ->
-  href = href.split(".")
-  targetPage = href[href.length-1].replace '/', ''
+  sections = href.split(".")
+  targetPage = sections[sections.length-1].replace '/', ''
+  sections.pop()
   if targetPage == currentPage
     return true
-  else
-    if $.inArray(targetPage, currentSections) >= 0
-      return true
+  else if sections.length > 0
+    for section in sections
+      matchingSection = $.inArray(section, currentSections)
+      if matchingSection >= 0
+        if section == targetPage
+          return false
+  else if $.inArray(targetPage, currentSections) >= 0
+    return true
