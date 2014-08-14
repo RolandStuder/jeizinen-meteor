@@ -4,7 +4,6 @@ Meteor.startup ->
         "click [data-animated]": (event) ->
             animation = $(event.currentTarget).attr('data-animated')
             target = $(event.currentTarget).closest(".jDocumentWrapper")
-            console.log target
             $(target).addClass("animated #{animation}")
             window.setTimeout (->
                 $(target).removeClass("animated #{animation}")
@@ -12,8 +11,6 @@ Meteor.startup ->
             ), 1000
 
         "click a": (event) ->
-            # console.log 'current document for ' +  this.collection$
-            console.log this
             if this.collection
                 Session.set('currentDocument.'+this.collection ,this)
 
