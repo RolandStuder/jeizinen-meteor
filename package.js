@@ -15,11 +15,11 @@ Package.on_use(function (api, where) {
 
     api.use('templating', client);
     api.use('jquery', both);
-    api.use('iron-router', 'client');
+    api.use('iron:router', 'client');
     api.use('underscore', both);
     api.use('handlebars', both);
     api.use('backbone', both);
-    api.use('mongo-livedata', both);
+    api.use('mongo', both);
     api.use('bootstrap-3', 'client');
     api.use('coffeescript', both);
 
