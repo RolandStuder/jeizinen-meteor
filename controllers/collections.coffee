@@ -165,12 +165,12 @@ UI.registerHelper "collection", () ->
   Session.get 'searchFilters'
   Session.get 'filters'
 
-  return Template.jCollection
+  # return Template.jCollection
 
-  # Template.__create__.Template.jCollection.__viewName, ->
-  #   Session.get 'searchFilters'
-  #   Session.get 'filters'
-  #   return Template.jCollection.__render.apply this, arguments
+  new Template Template.jCollection.viewName, ->
+    Session.get 'searchFilters'
+    Session.get 'filters'
+    return Template.jCollection.renderFunction.apply this, arguments
 
 
 UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, needs the same mechanism, as the collection helper
