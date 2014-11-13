@@ -8,11 +8,23 @@ title: Docs
 <h2>Jeizinen UI Prototyper</h2>
 A javascript prototyping framework to quickly create  highly interactive UI prototypes for webapplications.
 </div>
-Jeizinen is a meteorite package for [Meteor.js](http://meteor.com). Not published to atmosphere yet.
+Jeizinen is a package for [Meteor.js](http://meteor.com).
 
 <div class="alert alert-warning">
 This is an early alpha version, documentation may not be up to date!
 </div>
+
+## Getting started
+
+- Install [Meteor.js](http://meteor.com)
+- Install [Meteorite](https://github.com/oortcloud/meteorite).
+- create the app `meteor create myapp`
+- add the packate `meteor add rstuder:jeizinen`
+- start meteor `meteor create myapp`
+- point your browser to `localhost:3000`
+
+<a href="https://github.com/RolandStuder/jeizinen-meteor" class="btn btn-success btn-block">Jeizinen on GitHub <br></a>
+{%endraw %}
 
 ## Templates
 
@@ -249,25 +261,3 @@ When you click on this link, it will show:
 
 <div class="alert alert-success">This is good!</div>
 
-## Installing
-
-- Install [Meteor.js](http://meteor.com)
-- Install [Meteorite](https://github.com/oortcloud/meteorite).
-- run the command `meteor create myapp`
-- In your Meteor App create `smart.json` in the root directory to something like
-
-		{
-		  "packages": {
-		  	"jeizinen": {
-		  		"git": "https://github.com/RolandStuder/jeizinen-meteor.git"
-		  	}
-		  }
-		}
-
-- run command `mrt add jeizinen`
-- recommended: run command `mrt add bootstrap-3`
-- run the command `mrt`
-- point your browser to `localhost:3000`
-
-<a href="https://github.com/RolandStuder/jeizinen-meteor" class="btn btn-success btn-block">Jeizinen on GitHub <br><small>Download or clone</small></a>
-{%endraw %}
