@@ -12,6 +12,4 @@ Features:
 * Create collections of mockdata directly in a view
 * Create collections from CSV/YAML files
 
-Currently filters and search are broken.
-
 Documentation: http://rolandstuder.github.io/jeizinen-meteor
