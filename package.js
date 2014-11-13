@@ -16,15 +16,15 @@ Package.on_use(function (api, where) {
     client   = ['client'];
     server   = ['server'];
 
-    api.use('templating', client);
-    api.use('jquery', both);
-    api.use('iron:router', 'client');
-    api.use('underscore', both);
-    api.use('handlebars', both);
-    api.use('backbone', both);
-    api.use('mongo', both);
-    api.use('bootstrap-3', 'client');
-    api.use('coffeescript', both);
+    api.use('templating@1.0.9', client);
+    api.use('jquery@1.0.1', both);
+    api.use('iron:router@1.0.1', 'client');
+    api.use('underscore@1.0.1', both);
+    api.use('spacebars@1.0.3', both);
+    api.use('backbone@1.0.0', both);
+    api.use('mongo@1.0.8', both);
+    api.use('mizzao:bootstrap-3@3.3.0', 'client');
+    api.use('coffeescript@1.0.4', both);
 
 
     api.add_files(['server-and-client.js'], both);
@@ -49,7 +49,6 @@ Package.on_use(function (api, where) {
     api.add_files(['controllers/dataImport.coffee'],both)
 
     api.add_files(['flash-messages.js','flash-messages.html'], ['client'])
-
 
     api.export('PlaceholderImages');
     api.export('FlashMessages');
