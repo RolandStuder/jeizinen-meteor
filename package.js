@@ -1,5 +1,8 @@
 Package.describe({
-    summary: "Jeizinen - a UI prototyping framework"
+    summary: "Jeizinen - a UI prototyping framework",
+    version: "0.5.2",
+    name: "rstuder:jeizinen",
+    git: "https://github.com/RolandStuder/jeizinen-meteor.git"
 });
 
 Package.on_use(function (api, where) {
