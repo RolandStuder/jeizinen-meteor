@@ -27,7 +27,7 @@ Router.route "/(.*)",
     this.render path["page"]
     window.setTimeout (->
       addActiveClassToLinks path['sections'], path['page']
-      replaceImagePlaceholders()
+      # replaceImagePlaceholders()
       return
     ), 0 # for some reason, I does not work without a TimeOut, probably some concurrency issue.
     
@@ -43,8 +43,11 @@ paramsToSession = ->
 
 parse = (path) -> 
   path = path.split("/") 
-  layout = if path[path.length-2] then path[path.length-2] else "layout"
-  path.shift()
+  if path.length >= 2
+    layout = path[path.length-2]
+    path.shift()
+  else
+    layout = "layout"
   sections = if path[path.length-1] then path[path.length-1] else "index"
   sections = sections.split(".")
   page = sections[sections.length - 1]

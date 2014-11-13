@@ -1,7 +1,6 @@
 @importedCollections = new Meteor.Collection('importedCollections')
 
 if Meteor.isClient
-
   insertBulk = (collection, documents, collectionName) ->
     if collection
       _.compact _.map(documents, (item) ->
@@ -31,22 +30,24 @@ if Meteor.isClient
       createCollectionFromImport(collection)
       console.log "import now"
 
-
-
 if Meteor.isServer
 	Fibers = Npm.require('fibers');
 	fs = Npm.require 'fs'
 	csvtojson = Npm.require 'csvtojson'
 	YAML = Npm.require 'yamljs'
 
+	dataFolder = process.env.PWD + '/public/data/'
 
 	Meteor.startup ->
 		importedCollections.remove({})
-		fs.exists '../client/app/data', (exists) ->
+		fs.exists dataFolder, (exists) ->
 			if exists
-				filenames = fs.readdirSync '../client/app/data'
+				console.log fs.readdirSync dataFolder
+			if exists
+				filenames = fs.readdirSync dataFolder
 				console.log "Preparing for import by client: " + filenames
 				for filename in filenames
+					console.log filename
 					do (filename) ->
 						filename = splitFileName(filename)
 						if filename.extension is "csv"
@@ -62,13 +63,13 @@ if Meteor.isServer
 			Fibers(->
 				importedCollections.insert({collection: filename.name, source: filename.full, data: jsonArray})
 			).run()
-		fs.createReadStream("../client/app/data/" + filename.full).pipe csvConverter
+		fs.createReadStream(dataFolder + filename.full).pipe csvConverter
 
 
 
 	importYAML = (filename) ->
 		Fibers(->
-			jsonObjectWithKeys = YAML.load "../client/app/data/" + filename.full
+			jsonObjectWithKeys = YAML.load dataFolder + filename.full
 			jsonArray = []
 			for key of jsonObjectWithKeys
 				item = jsonObjectWithKeys[key]
