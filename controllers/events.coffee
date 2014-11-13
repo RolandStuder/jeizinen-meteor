@@ -1,6 +1,6 @@
 Meteor.startup ->
 
-    Template.layout.events #does not work yet with UI.body due to new implementation with blaze, workaround could be to have a wrapper around the layout, but I don't know how to do that with iron-router
+    Template.collections.events #does not work yet with UI.body due to new implementation with blaze, workaround could be to have a wrapper around the layout, but I don't know how to do that with iron-router
         "click [data-animated]": (event) ->
             animation = $(event.currentTarget).attr('data-animated')
             target = $(event.currentTarget).closest(".jDocumentWrapper")

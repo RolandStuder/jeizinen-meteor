@@ -5,15 +5,13 @@ ui prototyping framework for meteor, very alpha...
 
 The vision is to create a very fast prototyping framework, to create interactive prototypes for user-testing, demonstration or as specification for developers. 
 
-In the long run, the idea is to support easily editable mock-data.
+Features:
 
-Technically it is a meteorite package for meteor.
+* Wild card routing
+* Autohighlighting of navigation items
+* Create collections of mockdata directly in a view
+* Create collections from CSV/YAML files
 
-Docs: http://rolandstuder.github.io/jeizinen-meteor
+Currently filters and search are broken.
 
-## Release notes
-
-### 0.4
-
-* updated to be compatible meteor 0.8
-* added CSV and YAML import
+Documentation: http://rolandstuder.github.io/jeizinen-meteor

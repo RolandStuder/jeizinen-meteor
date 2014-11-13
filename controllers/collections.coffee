@@ -162,10 +162,15 @@ UI.registerHelper "collection", () ->
     this.objectsArray = Collections[this.name].find({$and: [query, newSearchQuery]}, {sort: sortInstruction, limit: this.limit })
     # this.objectsArray = Collections[this.name].find({$and: [query, searchQuery]}, {sort: sortInstruction, limit: this.limit })
 
-  Template.__create__ Template.jCollection.__viewName, ->
-    Session.get 'searchFilters'
-    Session.get 'filters'
-    return Template.jCollection.__render.apply this, arguments
+  Session.get 'searchFilters'
+  Session.get 'filters'
+
+  return Template.jCollection
+
+  # Template.__create__.Template.jCollection.__viewName, ->
+  #   Session.get 'searchFilters'
+  #   Session.get 'filters'
+  #   return Template.jCollection.__render.apply this, arguments
 
 
 UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, needs the same mechanism, as the collection helper

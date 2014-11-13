@@ -1,8 +1,8 @@
-Handlebars.registerHelper "random", (dataType, options) -> # deprecated, use mock now...
+UI.registerHelper "random", (dataType, options) -> # deprecated, use mock now...
   data = random(dataType,options.hash)
   new Handlebars.SafeString(data)
 
-Handlebars.registerHelper "pick", (commaSeparatedList) -> 
+UI.registerHelper "pick", (commaSeparatedList) -> 
   data = pick commaSeparatedList
   new Handlebars.SafeString(data)
 

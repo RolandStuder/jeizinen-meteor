@@ -11,32 +11,29 @@
 @path = {}
 
 
-console.log "test"
 
-Router.map ->
-  this.route 'allRoutes',
-    path: '*'
-    layoutTemplate: 'layout'
-    action: ->
-      path = parse(this.path)
-      paramsToSession()
+Router.route "/(.*)",
+  action: ->
+    path = parse(this.params[0])
+    # paramsToSession()
 
-      FlashMessages.clear()
-      FlashMessages.load()
+    FlashMessages.clear()
+    FlashMessages.load()
 
-      Jeizinen.log "Navigation: showing template '#{path["page"]}' with layout '#{path["layout"]}'"
-      Jeizinen.log "links pointing to '#{path.sections}' get the class active"
-      
-      this.router.layout path["layout"]
-      this.render(path["page"])
-      window.setTimeout (->
-        addActiveClassToLinks path['sections'], path['page']
-        replaceImagePlaceholders()
-        return
-      ), 0 # for some reason, I does not work without a TimeOut, probably some concurrency issue.
-    waiton: ->
-      Meteor.subscribe("importedCollections")
-
+    Jeizinen.log "Navigation: showing template '#{path["page"]}' with layout '#{path["layout"]}'"
+    Jeizinen.log "links pointing to '#{path.sections}' get the class active"
+    
+    this.layout path["layout"]
+    this.render path["page"]
+    window.setTimeout (->
+      addActiveClassToLinks path['sections'], path['page']
+      replaceImagePlaceholders()
+      return
+    ), 0 # for some reason, I does not work without a TimeOut, probably some concurrency issue.
+    
+  waiton: ->
+    Meteor.subscribe("importedCollections")
+    this.next()
 
 paramsToSession = ->
   for param in window.location.search.substring(1).split('&')
@@ -46,16 +43,16 @@ paramsToSession = ->
 
 parse = (path) -> 
   path = path.split("/") 
+  layout = if path[path.length-2] then path[path.length-2] else "layout"
   path.shift()
   sections = if path[path.length-1] then path[path.length-1] else "index"
   sections = sections.split(".")
   page = sections[sections.length - 1]
   sections.pop()
-  unless Template[page]
+  unless Template[page]?
     Jeizinen.log "#{page}: no such template"
     page = "notFound"  
-  layout = if path[path.length-2] then path[path.length-2] else "layout"
-  unless Template[layout]
+  unless Template[layout]?
     Jeizinen.log "#{layout}: no such layout"
     layout = "jEmptyLayout" 
   page: page
