@@ -63,6 +63,9 @@ getDataFromForm = (form) ->
   selects = $(form).find("select[name]")
   selects.each () ->
     data[$(this).attr("name")] = $(this).find(":selected").text()
+  textareas = $(form).find("textarea[name]")
+  textareas.each () ->
+    data[ $(this).attr("name") ] = $(this).val()
   return data
 
 
