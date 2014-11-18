@@ -1,6 +1,6 @@
 Package.describe({
     summary: "Jeizinen - a UI prototyping framework",
-    version: "0.5.7",
+    version: "0.5.9",
     name: "rstuder:jeizinen",
     git: "https://github.com/RolandStuder/jeizinen-meteor.git"
 });
@@ -17,13 +17,13 @@ Package.on_use(function (api, where) {
     server   = ['server'];
 
     api.use('templating@1.0.9', client);
+    api.use('gwendall:body-events@0.1.3', client);
     api.use('jquery@1.0.1', both);
     api.use('iron:router@1.0.1', 'client');
     api.use('underscore@1.0.1', both);
     api.use('spacebars@1.0.3', both);
     api.use('backbone@1.0.0', both);
     api.use('mongo@1.0.8', both);
-    api.use('mizzao:bootstrap-3@3.3.0', 'client');
     api.use('coffeescript@1.0.4', both);
 
 
