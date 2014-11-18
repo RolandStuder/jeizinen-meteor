@@ -10,8 +10,11 @@ Meteor.startup ->
             ), 1000
 
         "click a": (event,data) ->
-            if data.collection
-                Session.set('currentDocument.'+data.collection ,data)
+            if data?
+                if data.collection?
+                    Session.set('currentDocument.'+data.collection ,data)
+            else
+                true
 
         "click input[type=submit]": (event,data) ->
             event.preventDefault()
@@ -26,9 +29,11 @@ Meteor.startup ->
 
         "click [data-toggle-boolean]": (event,data) ->
             field = $(event.currentTarget).attr('data-toggle-boolean')
-            if data._id
-                Collections.toggleBoolean data, field
+            if data?
+                if data._id?
+                    Collections.toggleBoolean data, field
             else 
+                console.log field
                 Session.toggle field
 
         "click [href]": (event,data) ->
