@@ -18,7 +18,6 @@ Meteor.startup ->
 
         "click input[type=submit]": (event,data) ->
             event.preventDefault()
-            console.log data
             Session.set('currentDocument.'+data.collection ,data)
             form = $(event.currentTarget).closest("form")
             if data._id
@@ -33,11 +32,11 @@ Meteor.startup ->
                 if data._id?
                     Collections.toggleBoolean data, field
             else 
-                console.log field
                 Session.toggle field
 
         "click [href]": (event,data) ->
             href = $(event.currentTarget).attr('href')
+            goToAnchor event
             Session.set("currentPage",href)
 
         "click [data-set-field]": (event,data) ->
@@ -85,3 +84,14 @@ Meteor.startup ->
             Session.set(name, false)
         else
             Session.set(name, true)
+
+    goToAnchor = (event) ->
+        hash = event.currentTarget.hash
+        Meteor.defer -> 
+            hash = hash.replace("#","")
+            target = $("[name=\"#{hash}\"]")
+            if target?
+              $(document.body).scrollTop target.offset().top
+            else
+              $(document.body).scrollTop 0        
+             

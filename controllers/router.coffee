@@ -10,6 +10,7 @@
 
 @path = {}
 
+  
 
 
 Router.route "/(.*)",
@@ -34,6 +35,15 @@ Router.route "/(.*)",
   waiton: ->
     Meteor.subscribe("importedCollections")
     this.next()
+
+  after: ->
+    hash = this.params.hash
+    Meteor.defer ->
+      target = $("[name=\"#{hash}\"]")  
+      if target.offset().top
+        $(document.body).scrollTop target.offset().top
+      else
+        $(document.body).scrollTop 0        
 
 paramsToSession = ->
   for param in window.location.search.substring(1).split('&')
