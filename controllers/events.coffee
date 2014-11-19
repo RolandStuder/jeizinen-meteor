@@ -18,16 +18,22 @@ Meteor.startup ->
 
         "click input[type=submit]": (event,data) ->
             event.preventDefault()
-            Session.set('currentDocument.'+data.collection ,data)
             form = $(event.currentTarget).closest("form")
+            console.log data
+            if data?
+                if data.collection?
+                    Session.set('currentDocument.'+data.collection ,data)
+
             if data._id
                 Collections.updateDoc data, form
             else
                 Collections.createDoc form
                 form[0].reset()
+            return true
 
         "click [data-toggle-boolean]": (event,data) ->
             field = $(event.currentTarget).attr('data-toggle-boolean')
+            console.log data
             if data?
                 if data._id?
                     Collections.toggleBoolean data, field
@@ -90,7 +96,7 @@ Meteor.startup ->
         Meteor.defer -> 
             hash = hash.replace("#","")
             target = $("[name=\"#{hash}\"]")
-            if target?
+            if typeof target.offset() != "undefined"
               $(document.body).scrollTop target.offset().top
             else
               $(document.body).scrollTop 0        

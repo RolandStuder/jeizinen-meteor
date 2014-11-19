@@ -34,8 +34,9 @@ Collections.initialize = (name,amount,context) ->
     Collections.create name
     if Collections[name].find().count() is 0
       Collections.insert name, {context: context}, amount
-    # if Collections[name].find({'context._id': context._id}).count() is 0
-    #   Collections.insert name, {context: context}, amount 
+      if amount == 1
+        Session.set('currentDocument.'+name, Collections[name].findOne())
+
 
 Collections.createDoc = (form) ->
   inputs = $(form).find("input[name]")
@@ -46,14 +47,28 @@ Collections.createDoc = (form) ->
   inputs.each () ->
     data[ $(this).attr("name") ] = $(this).val()
   newDocument = Collections.insert name, data
-  # Session.set 'currentDocument', Collections[name].findOne(newDocument)
 
 
-Collections.updateDoc = (document,form) ->
+Collections.updateDoc = (document,form) -> #question: why does this not work anymore, when I assign a return value?
   data = getDataFromForm form
   if Collections[document.collection].findOne(document._id)
     Collections[document.collection].update document._id, $set: data
-# Session.set 'currentDocument', Collections[document.collection].findOne(document._id)
+
+
+Collections.getDocument = (collectionName) ->
+  currentDocument = Session.get('currentDocument.'+collectionName)
+  name = collectionName
+  object = currentDocument
+  if currentDocument
+    if currentDocument.context
+      currentDocument.parent = Collections[currentDocument.context.collection].findOne(currentDocument.context._id)
+  else
+    Collections.initialize name, 1
+    object = Collections[name].findOne()
+    console.log "getDocument" + object
+  return object
+
+
 
 getDataFromForm = (form) ->
   data = {}
@@ -119,7 +134,6 @@ Collections.execObjectFunctions = (obj) ->
 
 # HANDLEBARS HELPERS
 
-
 UI.registerHelper "collection", () ->
   Collections.initialize this.name, this.create
   this.limit = 100 unless typeof this.limit != "undefined"
@@ -169,6 +183,8 @@ UI.registerHelper "collection", () ->
   Session.get 'filters'
 
   # return Template.jCollection
+  console.log "collection"
+  console.log this
 
   new Template Template.jCollection.viewName, ->
     Session.get 'searchFilters'
@@ -177,18 +193,14 @@ UI.registerHelper "collection", () ->
 
 
 UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, needs the same mechanism, as the collection helper
-  currentDocument = Session.get('currentDocument.'+this.collection)
-  name = this.collection
-  object = currentDocument
-  Collections.initialize this.collection, this.create, this
-  if currentDocument
-    if currentDocument.context
-      currentDocument.parent = Collections[currentDocument.context.collection].findOne(currentDocument.context._id)
-  else
-    object = Collections[name].findOne()
-
-  this.object = object
-  return Template.jDocument
+  Collections.initialize this.collection, 1
+  currentDocument = Session.get("currentDocument."+this.collection)
+  if currentDocument?
+    this.objectsArray = Collections[this.collection].find({"_id": currentDocument._id}) 
+  new Template Template.jCollection.viewName, ->
+    Session.get 'searchFilters'
+    Session.get 'filters'
+    return Template.jCollection.renderFunction.apply this, arguments
 
 UI.registerHelper "field", (options) ->
   field = options.hash.name

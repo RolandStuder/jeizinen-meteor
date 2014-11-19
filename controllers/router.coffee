@@ -40,7 +40,7 @@ Router.route "/(.*)",
     hash = this.params.hash
     Meteor.defer ->
       target = $("[name=\"#{hash}\"]")  
-      if target.offset().top
+      if typeof target.offset() != "undefined"
         $(document.body).scrollTop target.offset().top
       else
         $(document.body).scrollTop 0        
