@@ -17,14 +17,12 @@ This is an early alpha version, documentation may not be up to date!
 ## Getting started
 
 - Install [Meteor.js](http://meteor.com)
-- Install [Meteorite](https://github.com/oortcloud/meteorite).
 - create the app `meteor create myapp`
 - add the packate `meteor add rstuder:jeizinen`
-- start meteor `meteor create myapp`
+- start meteor `meteor`
 - point your browser to `localhost:3000`
 
 <a href="https://github.com/RolandStuder/jeizinen-meteor" class="btn btn-success btn-block">Jeizinen on GitHub <br></a>
-{%endraw %}
 
 ## Templates
 
@@ -237,17 +235,14 @@ Filter a collection by using the `filter`-helper in a an html-element.
 
 If this element is clicked, the collection will be filtered by searching for documents that have the value "string" in the field "fieldname". The filtering will persist across page switches. To show all elements again you reset by filtering with `value=""`.
 
-
+<!--
 ## Get images
 
 	<img data-search="dolphins">
 
 Image tags with the attribute `data-search` will automatically point to a flickr image that fits the search string.
-
-<!-- I think this currently does not work -->
-<!-- If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
- -->
-
+-->
+<!-- I think this currently does not work 
 ## Flash Messages
 
 If you include the `{{> flashMessages }}`-template somehwere you can display messages.
@@ -261,3 +256,10 @@ When you click on this link, it will show:
 
 <div class="alert alert-success">This is good!</div>
 
+
+-->
+<!-- If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
+ -->
+
+
+{%endraw %}
