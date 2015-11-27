@@ -82,6 +82,31 @@ Meteor.startup ->
                 filters[collection] = {}  
             filters[collection][field] = value
             Session.set "searchFilters", filters
+        
+        # Autoupdates from forms
+
+        "change input[type=checkbox]": (event,data) ->
+            value = event.currentTarget.checked
+            autoPickUpdateType(event, data, value)
+        
+        "change select": (event,data) ->
+            select = event.currentTarget
+            value = select.options[select.selectedIndex].value
+            autoPickUpdateType(event, data, value)
+
+        "keyup input[type=text]": (event,data) ->
+            value = event.currentTarget.value
+            autoPickUpdateType(event, data, value)
+
+        "keyup input[type=password]": (event,data) -> #for some reason, it does not work with password fields, everything is passed nicely to the autoPickUpdateType as far as I could tell, but it does not update in case autoPickUpdateType is document.
+            value = event.currentTarget.value
+            console.log "can't update from password if it is a document"
+            autoPickUpdateType(event, data, value)
+
+        "keyup textarea": (event,data) ->
+            value = event.currentTarget.value
+            autoPickUpdateType(event, data, value)
+
 
 
     Session['toggle'] = (name) ->
@@ -99,5 +124,28 @@ Meteor.startup ->
             if typeof target.offset() != "undefined"
               $(document.body).scrollTop target.offset().top
             else
-              $(document.body).scrollTop 0        
+              $(document.body).scrollTop 0
+
+    isAutoupdate = (event) ->
+        form = $(event.currentTarget).closest("form")[0]
+        if form and form.getAttribute("no-auto-update") == ""
+            console.log "Auto update prevented"
+            return false
+        else
+            return true
+
+    autoPickUpdateType = (event, data, value) ->
+        element = event.currentTarget
+        form = $(element).closest("form")[0]
+        name = element.id or element.name
+        console.log element.value, form, name, value, data
+        if isAutoupdate(event)
+            if data
+                Collections.updateField(data, name, value)
+            else if form and (form.id or form.name )
+                formName = form.id or form.name
+                Session.set formName + "." + name, value
+            else
+                Session.set name, value
+            
              

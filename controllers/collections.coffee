@@ -54,6 +54,11 @@ Collections.updateDoc = (document,form) -> #question: why does this not work any
   if Collections[document.collection].findOne(document._id)
     Collections[document.collection].update document._id, $set: data
 
+Collections.updateField = (document, field, value) ->
+  if Collections[document.collection].findOne(document._id)
+    data = {}
+    data[field] = value
+    Collections[document.collection].update document._id, $set: data;
 
 Collections.getDocument = (collectionName) ->
   currentDocument = Session.get('currentDocument.'+collectionName)
@@ -71,16 +76,23 @@ Collections.getDocument = (collectionName) ->
 
 
 getDataFromForm = (form) ->
+  getIdOrName = (element) -> 
+    return element.id or element.name
+
   data = {}
-  inputs = $(form).find("input[name]")
-  inputs.each () ->
-    data[ $(this).attr("name") ] = $(this).val()
-  selects = $(form).find("select[name]")
-  selects.each () ->
-    data[$(this).attr("name")] = $(this).find(":selected").text()
-  textareas = $(form).find("textarea[name]")
-  textareas.each () ->
-    data[ $(this).attr("name") ] = $(this).val()
+  inputs = {}
+  inputs.text = $(form).find("input[type=text]")
+  inputs.text.each () ->
+    data[ getIdOrName(this) ] = this.value
+  inputs.selects = $(form).find("select[name]")
+  inputs.selects.each () ->
+    data[ getIdOrName(this) ] = $(this).find(":selected").text()
+  inputs.textareas = $(form).find("textarea[name]")
+  inputs.textareas.each () ->
+    data[ getIdOrName(this) ] = $(this).val()
+  inputs.checkboxes = $(form).find("input[type=checkbox]")
+  inputs.checkboxes.each () ->
+    data[ getIdOrName(this) ] = $(this)[0].checked
   return data
 
 

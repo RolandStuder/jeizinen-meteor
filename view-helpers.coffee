@@ -22,21 +22,26 @@ UI.registerHelper "animate", (animation) ->
   return "style=\"#{animation}\""
 
 UI.registerHelper "session", (input, defaultValue) ->
-  inputArray = input.split(".")
-  if inputArray.length > 1
-    output = Session.get inputArray[0]
-    inputArray.shift()
-    for part in inputArray
-      if typeof output != "undefined"
-        output = output[part]
-      else
-        return defaultValue
-    return output
+  if typeof Session.get != "undefined"
+    return Session.get input
   else
-    if typeof Session.get != "undefined"
-      return Session.get input
-    else
-      return defaultValue
+    return defaultValue
+
+  # inputArray = input.split(".") #I don't remember or see, why I did this.
+  # if inputArray.length > 1
+  #   output = Session.get inputArray[0]
+  #   inputArray.shift()
+  #   for part in inputArray
+  #     if typeof output != "undefined"
+  #       output = output[part]
+  #     else
+  #       return defaultValue
+  #   return output
+  # else
+  #   if typeof Session.get != "undefined"
+  #     return Session.get input
+  #   else
+  #     return defaultValue
 
 UI.registerHelper "setTrue", (attr, id) ->
   "data-onClick-setTrue=\"" + attr + "\" data-id=\"" + id + "\""
