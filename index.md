@@ -101,7 +101,48 @@ When going to /documents.someTemplate `someTemplate` will be rendered and links 
     </div>
 </div>
 
+## Autosaving
 
+Form data is always automatically saved in a session. It does not persist across reloads.
+
+### Autosaving Inputs
+	
+	<input type="text" name="phoneNumber">
+	<p>{{session "phoneNumber"}}</p>
+
+Any input entered into an input field, will be saved to a session variable with name that is the same as the id or the name of the input (id has priority). This works for
+
+* Textinput
+* Checkboxes
+* Selects
+* Textareas
+
+The session is available across the whole application.
+
+### Autosaving Forms
+
+	<form name="contact">
+		Name <input type="text" name="name">
+		PhoneNumber <input type="text" name="phoneNumber">
+		<p>{{session "contact.name"}} {{session "contact.phoneNumber"}}</p>
+	</form>
+
+This will save any input in the form to the session prepended by the id or name of the form (id has priority). Agains this data is availble across the whole application.
+
+To prevent autosave add the no-auto-update`-Attribute to the form:
+
+	<form name="contact" no-auto-update> ...
+
+### Forms for documents
+
+If you are using Collections or Documents, instead of saving the data to the session, it saved it to the collection or document instead.
+
+	{{#collection name="contacts" create="10"}}
+		{{field name="name" random="name"}} {{#if selected}}(selected){{/if}}<br>
+		<input type="checkbox" name="selected">
+		<input type="text" name="name" value="{{name}}">
+		<hr>
+	{{/collection}}
 
 ## Repeat
 
@@ -220,11 +261,13 @@ Of course sometimes we just want to see one entry of a list. You do this by usin
 By putting a `form` in a document or collection wrapper, you can update the model automatically. 
 
 	{{#document collection="csvImport"}}
-		<form>
+		<form no-auto-update>
 			<input name="columnName" value="{{columnname}}"> //the input field must have the same name as the field that sould be updated
 			<input type="Submit" href="index"> // the form ignores the action, so you instead set an href on the input.
 		</form>
 	{{/collection}}
+
+Notice the `no-auto-update`, if it is not set autosave without the need to submit.
 
 
 ## Filtering Collections
