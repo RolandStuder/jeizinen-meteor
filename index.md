@@ -4,14 +4,15 @@ title: Docs
 ---
 
 {%raw %}
-<div class="lead jumbotron">
-<h2>Jeizinen UI Prototyper</h2>
+
+#Jeizinen UI Prototyper
+
 A javascript prototyping framework to quickly create  highly interactive UI prototypes for webapplications.
-</div>
-Jeizinen is a package for [Meteor.js](http://meteor.com).
+
+Jeizinen is a package for [Meteor.js](http://meteor.com). License: MIT.
 
 <div class="alert alert-warning">
-This is an early alpha version, documentation may not be up to date!
+	Current versions are still experimental and not recommended for use in client-projects!
 </div>
 
 ## Getting started
