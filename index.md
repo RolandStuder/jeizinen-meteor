@@ -97,7 +97,7 @@ When going to /documents.someTemplate `someTemplate` will be rendered and links 
     </div>
     <div id="navigationCode" class="panel-collapse collapse">
       <div class="panel-body">
-      		<script src="https://gist-it.sudarmuthu.com/github/RolandStuder/jeizinen-examples/blob/master/examples/navigation.html?footer=no"></script>
+      		<script src="http://gist-it.sudarmuthu.com/github/RolandStuder/jeizinen-examples/blob/master/examples/navigation.html?footer=no"></script>
       </div>
     </div>
 </div>
