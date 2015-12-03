@@ -42,8 +42,9 @@ Meteor.startup ->
 
         "click [href]": (event,data) ->
             href = $(event.currentTarget).attr('href')
-            goToAnchor event
-            Session.set("currentPage",href)
+            goToAnchor event #how is this supposed to work when I change path name?
+            Session.set("currentPage",href) #weird, what did I do here?
+            #location.pathname = href
 
         "click [data-set-field]": (event,data) ->
             field = $(event.currentTarget).attr('data-set-field')
