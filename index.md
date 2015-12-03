@@ -83,7 +83,7 @@ When going to /documents.someTemplate `someTemplate` will be rendered and links 
     </div>
     <div id="navigationExample" class="panel-collapse collapse">
       <div class="panel-body">
-       <iframe src="http://jeizinen-examples.herokuapp.com/navigation" height="400"></iframe>
+       <iframe src="https://jeizinen-examples.herokuapp.com/navigation" height="400"></iframe>
       </div>
     </div>
   </div>
@@ -97,7 +97,7 @@ When going to /documents.someTemplate `someTemplate` will be rendered and links 
     </div>
     <div id="navigationCode" class="panel-collapse collapse">
       <div class="panel-body">
-      		<script src="http://gist-it.sudarmuthu.com/github/RolandStuder/jeizinen-examples/blob/master/examples/navigation.html?footer=no"></script>
+      		<script src="https://gist-it.sudarmuthu.com/github/RolandStuder/jeizinen-examples/blob/master/examples/navigation.html?footer=no"></script>
       </div>
     </div>
 </div>
