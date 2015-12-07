@@ -95,7 +95,7 @@ Meteor.startup ->
             value = select.options[select.selectedIndex].value
             autoPickUpdateType(event, data, value)
 
-        "keyup input[type=text]": (event,data) ->
+        "keyup input:not([type]), keyup input[type=text]": (event,data) ->
             value = event.currentTarget.value
             autoPickUpdateType(event, data, value)
 
