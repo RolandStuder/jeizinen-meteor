@@ -3,6 +3,7 @@
 
 # COLLECTION CONTROLLER
 @Collections = new Meteor.Collection("Collection")
+Session.set('_index','0');
 
 # @newCollection = new Meteor.Collection('newCollection')
 # newCollection.insert({description: "I don't get it!"})
@@ -77,11 +78,15 @@ Collections.insert = (collection, data, amount) -> # use custom insert so mock h
   amount = 0 unless amount
   data["collection"] = collection
   data["createdAt"] = new Date().getTime()
+  currentIndex = Number.parseInt(Session.get '_index')
+  insertIndex = insertIndex
   unless amount == 0
     for i in [1..amount]
-      console.log "i am here"
+      currentIndex++
+      data["_index"] = currentIndex
       insertData = Collections.execObjectFunctions(data)
       Collections[collection].insert insertData
+    Session.set('_index', currentIndex)
 
 Collections.initialize = (name,amount,context) ->
   amount = 0 unless amount
@@ -134,7 +139,6 @@ Collections.getDocument = (collectionName) ->
 getDataFromForm = (form) ->
   getIdOrName = (element) ->
     return element.id or element.name
-
   data = {}
   inputs = {}
   inputs.text = $(form).find("input[type=text]")

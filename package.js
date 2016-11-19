@@ -27,6 +27,7 @@ Package.on_use(function (api, where) {
     api.use('mongo@1.0.8', both);
     api.use('coffeescript@1.0.4', both);
     api.use('session@1.1.7', both);
+    api.use('dfischer:faker@1.0.8', both);
 
 
     api.add_files(['server-and-client.js'], both);
