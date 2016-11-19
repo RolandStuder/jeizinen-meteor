@@ -48,12 +48,12 @@ Now just start creating templates and link to them with regular links. You can n
 This way you can easily create multiple pages and components like navigation bars...
 
 <!-- Wait for bug from iron router to resolve: https://github.com/EventedMind/iron-router/issues/606 -->
-<!-- ### multiple layouts 
+<!-- ### multiple layouts
 
 You can use multiple layouts:
-	
+
 In your main `html` put {{> renderLayout}} instead of {{> renderPage }}. Then create a template that contains {{> renderPage}} like:
-	
+
 	<template name="layoutName">
 		... some navigation or stuff ...
 		{{> renderPage }}
@@ -63,7 +63,7 @@ Now you can navigate to page like `/layoutName/pageName` and the template (pageN
 
 Note: You cannot render a layout without a template. -->
 
-### Navigation
+## Navigation
 
 All links to the current page, get the css class `.active`, also links within Bootstrap navigation elements are automatically set to `.active`.
 
@@ -102,25 +102,96 @@ When going to /documents.someTemplate `someTemplate` will be rendered and links 
     </div>
 </div>
 
+## Data
+
+It has an underlying Data layer, that allow to use realistic data. There are two basic concepts:
+
+* Collections are basically Datasets you can iterate over
+* Session Variables hold key value pairs
+
+### Session Variables
+
+You can set a session variable with an input tag:
+
+	<input type="text" name="userName" value="{{userName}}">
+	{{session "userName"}}
+
+The input is automatically saved to a session variable. No need to submit it. Set the value to `{{userName}` if you want to keep the valut in the input field across page changes. See more possibilites in [autosaving](#autosaving)
+
+
+## Importing data with CSV or YAML
+
+Any CSV- or YAML-file you put in the directory `public/data` will be read and put into a collection. You need to create a separate file for every collection you want to use in your prototype. If you put a file like `people.csv` in that folder, you will be able to use its data within a collection or document-helper. For example: `#{{collection name="people"}}`. Any data of any column can now be used within that wrapper (do not use spaces or special characters in the columns names though).
+
+#### use in collection-helper
+
+	{{#repeat name="csvImport"}}
+		{{columnName}} // no need for field name="columnname" if the data already exists
+		{{field "notInCSV" pick="0,1"}} // you can mix existing data, with newly created random data.
+	{{/repeat}}
+
+#### use in document-helper
+
+Of course sometimes we just want to see one entry of a list. You do this by using the wrapper '{{#document}}'. Any link that is clicked in a collection-helper automatically sets a hidden session variable, that the clicked element is the current element. So you can link to a detail page and it will automatically show the correct document.
+
+	{{#document collection="csvImport"}}
+		{{columnName}} //works just like in the collection
+	{{/document}}
+
+
+### changing data
+
+By putting a `form` in a document or collection wrapper, you can update the model automatically.
+
+	{{#document collection="csvImport"}}
+		<form no-auto-update>
+			<input name="columnName" value="{{columnname}}"> //the input field must have the same name as the field that sould be updated
+			<input type="Submit" href="index"> // the form ignores the action, so you instead set an href on the input.
+		</form>
+	{{/collection}}
+
+Notice the `no-auto-update`, if it is not set autosave without the need to submit.
+
+
 ## Autosaving
 
-Form data is always automatically saved in a session. It does not persist across reloads.
+Form data is always automatically saved. It does not persist across reloads. If the form is enclosed by a {{#repeat}} helper with a collection or a document, form data is saved to the corresponding document.
 
-### Autosaving Inputs
-	
+### Textinputs
+
 	<input type="text" name="phoneNumber">
 	<p>{{session "phoneNumber"}}</p>
 
 Any input entered into an input field, will be saved to a session variable with name that is the same as the id or the name of the input (id has priority). This works for
 
-* Textinput
-* Checkboxes
-* Selects
-* Textareas
+### Selects
 
-The session is available across the whole application.
+	<select class="browser-default" name="selectValue">
+		<option value="" disabled selected>Choose your option</option>
+		<option value="1">Option 1</option>
+		<option value="2">Option 2</option>
+		<option value="3">Option 3</option>
+	</select>
+	{{session "selectValue"}}
 
-### Autosaving Forms
+### Textareas
+
+	<textarea type="text" name="comment">{{session "comment"}}</textarea>
+	<p>{{simpleFormat (session "comment")}}</p>
+
+	or have fun with markdown
+
+	{{#markdown}}
+		{{ session "comment"}}
+	{{/markdown}}
+
+### Checkboxes
+
+	<input type="checkbox" id="happy" name="happy" />
+	<label for="happy">Happy</label>
+	{{session "happy"}}
+
+### Forms with namespacing
 
 	<form name="contact">
 		Name <input type="text" name="name">
@@ -128,9 +199,9 @@ The session is available across the whole application.
 		<p>{{session "contact.name"}} {{session "contact.phoneNumber"}}</p>
 	</form>
 
-This will save any input in the form to the session prepended by the id or name of the form (id has priority). Agains this data is availble across the whole application.
+This will save any input in the form to the session prepended by the name of the form. Agains this data is availble across the whole application.
 
-To prevent autosave add the no-auto-update`-Attribute to the form:
+To prevent autosave add the `no-auto-update`-Attribute to the form:
 
 	<form name="contact" no-auto-update> ...
 
@@ -138,27 +209,32 @@ To prevent autosave add the no-auto-update`-Attribute to the form:
 
 If you are using Collections or Documents, instead of saving the data to the session, it saved it to the collection or document instead.
 
-	{{#collection name="contacts" create="10"}}
+	{{#repeat collection="contacts" create="10"}}
 		{{field name="name" random="name"}} {{#if selected}}(selected){{/if}}<br>
 		<input type="checkbox" name="selected">
 		<input type="text" name="name" value="{{name}}">
 		<hr>
-	{{/collection}}
+	{{/repeat}}
 
 ## Repeat
 
-	{{#repeat times="10"}}
+Repeat is a very powerful helper, you can use it very simply. To repeat a block 10 times:
+
+	{{#repeat limit="10"}}
 		block
 	{{/repeat}}
 
-Will repeat the block within 10 times.
+To repeat with certain values you can  repeat the block once for every comma separated value given by ´with´. ´{{ this }}´ will be replaced by the current comma separated value. (cannot be mixed with limit)
 
 	{{#repeat with="A,B,C"}}
 		block {{ this }}
 	{{/repeat}}
 
-Will repeat the block once for every comma separated value given by ´with´. ´{{ this }}´ will be replaced by the current comma separated value.
+But repeat blocks can also be real collections of data, see [collections](#collections)
 
+	{{#repeat collection="contacts"}}
+		{{name}}
+	{{/repeat}}
 
 ## Data
 
@@ -183,25 +259,38 @@ Will return one of the comma-separated options.
 
 ### Collections
 
-    {{#collection name='people' create=100 sort='name' limit='10'}}
+    {{#repeat collection='people' create=100 sort='name' limit='10'}}
         block
-    {{/collection}}
+				{{else}}
+				show else blockthis if collection is empty because of filters or other reasons
+    {{/repeat}}
 
-The `collection` block helper allows use of realistic data in your views. The block within the collection is repeated for all `documents` in you dataset. Datasets are created by importing data via CSV or YAML files or you can create documents directly with the collection helper.
+The `repeat` block helper allows use of realistic data in your views. The block within the collection is repeated for all `documents` in you dataset. Datasets are created by importing data via CSV or YAML files or you can create documents directly with the repeat helper.
 
 #### options
 
-##### create=`integer`
+create=`integer`
+: `create` pass an integer to create as many empty documents for this collection. example: `create=100`
 
-`create` pass an integer to create as many empty documents for this collection. example: `create=100`
+sort=`"fieldName"`
+:`sort` takes a fieldName by which the collection will be sorted. Example: `sort="name"`
 
-##### sort=`"fieldName"`
+limit=`integer`
+:`limit` will limit the displayed number of documents. Example: `limit=10`
 
-`sort` takes a fieldName by which the collection will be sorted. Example: `sort="name"`
+#### Nested colllections
 
-##### limit=`integer`
+You can nest collections by using the id of the parent to create a new collection:
 
-`limit` will limit the displayed number of documents. Example: `limit=10`
+```
+	{{#repeat collection="nested" create=10}}
+		 {{field "name" random="name"}}
+		 {{#repeat collection=_id create=3}}
+			 <small>{{field "name" random="name"}}</small>
+		 {{/repeat}}
+		 <hr>
+	{{/repeat}}
+```
 
 ### Field
 
@@ -209,10 +298,10 @@ The `collection` block helper allows use of realistic data in your views. The bl
 
 This helper displays the value of a field from a document. It is only to be used within a `collection` or `document` helper. It can be used to create data for documents on the fly.
 
-    {{#collection name='people' create='10'}}
+    {{#repeat name='people' create='10'}}
         {{field name='name' random="name"}}<br> // will give you a random first name
         {{field name='category' pick="friend,family"}} // will return a random pick
-    {{/collection}}
+    {{/repeat}}
 
 This will output a list of 10 names (only if you assign it a random or a pick attribute). **This data is saved and will not change, if you switch between pages.** However if you reload a page, the collections are reset.
 
@@ -220,7 +309,7 @@ This will output a list of 10 names (only if you assign it a random or a pick at
 
 ##### random=`randomOption`
 
-`random` will assign a random value, if it has no value and if you pass it a valid randomOption like name, firstName, familyName, phoneNumber or email. 
+`random` will assign a random value, if it has no value and if you pass it a valid randomOption like name, firstName, familyName, phoneNumber or email.
 
 ##### pick=`comma,separated,list`
 
@@ -237,38 +326,6 @@ This will output a list of 10 names (only if you assign it a random or a pick at
 
 * `filters` If you set a filter for a collection you can get the currently set value by: {{session "filters.collection.field"}}
 
-## Importing data with CSV or YAML
-
-Any CSV- or YAML-file you put in the directory `public/data` will be read and put into a collection. You need to create a separate file for every collection you want to use in your prototype. If you put a file like `people.csv` in that folder, you will be able to use its data within a collection or document-helper. For example: `#{{collection name="people"}}`. Any data of any column can now be used within that wrapper (do not use spaces or special characters in the columns names though).
-
-#### use in collection-helper
-
-	{{#collection name="csvImport"}}
-		{{columnName}} // no need for field name="columnname" if the data already exists
-		{{field name="notInCSV" pick="0,1"}} // you can mix existing data, with newly created random data.
-	{{/collection}}
-
-#### use in document-helper
-
-Of course sometimes we just want to see one entry of a list. You do this by using the wrapper '{{#document}}'. Any link that is clicked in a collection-helper automatically sets a hidden session variable, that the clicked element is the current element. So you can link to a detail page and it will automatically show the correct document.
-
-	{{#document collection="csvImport"}}
-		{{columnName}} //works just like in the collection 
-	{{/collection}}
-
-
-### changing data
-
-By putting a `form` in a document or collection wrapper, you can update the model automatically. 
-
-	{{#document collection="csvImport"}}
-		<form no-auto-update>
-			<input name="columnName" value="{{columnname}}"> //the input field must have the same name as the field that sould be updated
-			<input type="Submit" href="index"> // the form ignores the action, so you instead set an href on the input.
-		</form>
-	{{/collection}}
-
-Notice the `no-auto-update`, if it is not set autosave without the need to submit.
 
 
 ## Filtering Collections
@@ -286,7 +343,7 @@ If this element is clicked, the collection will be filtered by searching for doc
 
 Image tags with the attribute `data-search` will automatically point to a flickr image that fits the search string.
 -->
-<!-- I think this currently does not work 
+<!-- I think this currently does not work
 ## Flash Messages
 
 If you include the `{{> flashMessages }}`-template somehwere you can display messages.
@@ -304,6 +361,31 @@ When you click on this link, it will show:
 -->
 <!-- If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
  -->
+## Some utilities
+
+#### hyphenate
+
+	{{hypenate "some string"}}
+
+returns some-string, helpful for turning strings form model in to css classes
+
+	{{modulo number divider}}
+
+returns modulo, helpful for image placeholder services that offer limited numer of direct id pictures like http://pravatar.cc/
+
+## Helpful resources
+
+### Recommended Image Placeholders
+
+```
+		<img src="http://placehold.it/100x100" alt=""  class="responsive-img"
+		style="object-fit: cover; width: 100px; height: 100px"/>
+		<img src="http://i.pravatar.cc/150?img={{modulo _index 49}}" alt=""  class="responsive-img circle"
+		style="object-fit: cover; width: 100px; height: 100px"/>
+		<img src="http://lorempixel.com/400/200/sports/{{_index}}" alt=""  class="responsive-img"
+		style="object-fit: cover; width: 100px; height: 100px"/>
+```
+ {{_index}} will only be available in repeats or documents
 
 
 {%endraw %}
