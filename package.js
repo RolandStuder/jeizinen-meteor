@@ -11,7 +11,7 @@ Package.on_use(function (api, where) {
         yamljs: "0.1.5",
         csvtojson: "0.3.8"
     });
-	
+
     both   = ['client', 'server'];
     client   = ['client'];
     server   = ['server'];
@@ -25,6 +25,7 @@ Package.on_use(function (api, where) {
     api.use('backbone@1.0.0', both);
     api.use('mongo@1.0.8', both);
     api.use('coffeescript@1.0.4', both);
+    api.use('session@1.1.7', both);
 
 
     api.add_files(['server-and-client.js'], both);
@@ -39,6 +40,7 @@ Package.on_use(function (api, where) {
 
     api.add_files([ // client files
             'controllers/events.coffee',
+            'controllers/utilities.coffee',
             'controllers/errors.coffee',
             'controllers/router.coffee',
             'controllers/collections.coffee',
@@ -57,9 +59,6 @@ Package.on_use(function (api, where) {
     api.export('seed');
     api.export('populateEditForms');
     api.export('Template');
+    api.export('Session');
 
 });
-
-
-
-

@@ -16,28 +16,27 @@ Meteor.startup ->
             else
                 true
 
-        "click input[type=submit]": (event,data) ->
+        "submit form": (event,data) ->
             event.preventDefault()
             form = $(event.currentTarget).closest("form")
-            console.log data
             if data?
                 if data.collection?
                     Session.set('currentDocument.'+data.collection ,data)
-
-            if data._id
-                Collections.updateDoc data, form
+                if data._id
+                    Collections.updateDoc data, form
             else
                 Collections.createDoc form
                 form[0].reset()
+            if form.attr('href')?
+              Session.set("currentPage",form.attr('href'))
             return true
 
         "click [data-toggle-boolean]": (event,data) ->
             field = $(event.currentTarget).attr('data-toggle-boolean')
-            console.log data
             if data?
                 if data._id?
                     Collections.toggleBoolean data, field
-            else 
+            else
                 Session.toggle field
 
         "click [href]": (event,data) ->
@@ -67,7 +66,7 @@ Meteor.startup ->
             filters = Session.get "filters"
             if typeof filters == "undefined"
                 filters = {}
-                filters[collection] = {}  
+                filters[collection] = {}
             filters[collection][field] = value
             Session.set "filters", filters
 
@@ -80,16 +79,16 @@ Meteor.startup ->
             filters = Session.get "searchFilters"
             if typeof filters == "undefined"
                 filters = {}
-                filters[collection] = {}  
+                filters[collection] = {}
             filters[collection][field] = value
             Session.set "searchFilters", filters
-        
+
         # Autoupdates from forms
 
         "change input[type=checkbox]": (event,data) ->
             value = event.currentTarget.checked
             autoPickUpdateType(event, data, value)
-        
+
         "change select": (event,data) ->
             select = event.currentTarget
             value = select.options[select.selectedIndex].value
@@ -119,7 +118,7 @@ Meteor.startup ->
 
     goToAnchor = (event) ->
         hash = event.currentTarget.hash
-        Meteor.defer -> 
+        Meteor.defer ->
             hash = hash.replace("#","")
             target = $("[name=\"#{hash}\"]")
             if typeof target.offset() != "undefined"
@@ -139,7 +138,6 @@ Meteor.startup ->
         element = event.currentTarget
         form = $(element).closest("form")[0]
         name = element.id or element.name
-        console.log element.value, form, name, value, data
         if isAutoupdate(event)
             if data
                 Collections.updateField(data, name, value)
@@ -148,5 +146,3 @@ Meteor.startup ->
                 Session.set formName + "." + name, value
             else
                 Session.set name, value
-            
-             

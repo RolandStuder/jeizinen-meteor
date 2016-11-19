@@ -13,7 +13,7 @@
 Collections.create = (name) ->
   newCollection = {}
   if name
-    unless Collections[name]  
+    unless Collections[name]
       newCollection[name] = new Meteor.Collection(null)  unless Collections[name]
       _.extend Collections, newCollection
       # console.log "created: " + name
@@ -25,6 +25,7 @@ Collections.insert = (collection, data, amount) -> # use custom insert so mock h
   data["createdAt"] = new Date().getTime()
   unless amount == 0
     for i in [1..amount]
+      console.log "i am here"
       insertData = Collections.execObjectFunctions(data)
       Collections[collection].insert insertData
 
@@ -38,15 +39,16 @@ Collections.initialize = (name,amount,context) ->
         Session.set('currentDocument.'+name, Collections[name].findOne())
 
 
-Collections.createDoc = (form) ->
-  inputs = $(form).find("input[name]")
-  name = $(form).attr("data-collection")
+Collections.createDoc = (form) -> # creates a doc from submitted jquery form
+  inputs = form.find("input[name]")
+  name = form.attr("data-collection")
   data = {collection: name}
   Collections.create name
   collection = Collections[name]
   inputs.each () ->
     data[ $(this).attr("name") ] = $(this).val()
   newDocument = Collections.insert name, data
+  console.log name,data
 
 
 Collections.updateDoc = (document,form) -> #question: why does this not work anymore, when I assign a return value?
@@ -76,7 +78,7 @@ Collections.getDocument = (collectionName) ->
 
 
 getDataFromForm = (form) ->
-  getIdOrName = (element) -> 
+  getIdOrName = (element) ->
     return element.id or element.name
 
   data = {}
@@ -101,7 +103,7 @@ Collections.toggleBoolean = (document, field) ->
   data = {}
   if document[field] is true
     data[field] = false
-  else 
+  else
     data[field] = true
   Collections[document.collection].update(document._id, $set: data)
 
@@ -115,7 +117,7 @@ Collections.setAll = (collection, field, value, context) ->
 
 Collections.setAllBoolean = (collection, field, value, context) ->
   data = {}
-  if value is "true" then value = true else value = false 
+  if value is "true" then value = true else value = false
   data[field] = value
   ids = []
   Collections[collection].find({'context._id': context._id}).forEach (item) ->
@@ -127,15 +129,15 @@ Collections.delayedUpdate = (name,id,data) ->
   window.setTimeout (->
     Collections[name].update id, {$set: data}
     return
-  ), 0 
+  ), 0
   # I have to delay the update, because otherwise somehow I trouble with the template
-  # this creates new problems as the forms actually create their own data, so there is a conflict 
+  # this creates new problems as the forms actually create their own data, so there is a conflict
 
 
 # HELPER METHODS
 
 
-Collections.execObjectFunctions = (obj) -> 
+Collections.execObjectFunctions = (obj) ->
   returnObj = {}
   for key, value of obj
       if _.isFunction value
@@ -149,6 +151,7 @@ Collections.execObjectFunctions = (obj) ->
 UI.registerHelper "collection", () ->
   Collections.initialize this.name, this.create
   this.limit = 100 unless typeof this.limit != "undefined"
+  this.limit = Number.parseInt(this.limit)
   sortInstruction = {}
   sortInstruction[this.sort] = 1
   filters = Session.get("filters")
@@ -184,19 +187,29 @@ UI.registerHelper "collection", () ->
     else
       newSearchQuery = {}
 
-  if this._id #if there is a surrounding context, only find elements with that context !! this obviously doesn work currently
-    parent = Collections[this.collection].findOne(this._id)
-    this.objectsArray = Collections[this.name].find({},sort: name: 1)
-  else 
-    this.objectsArray = Collections[this.name].find({$and: [query, newSearchQuery]}, {sort: sortInstruction, limit: this.limit })
-    # this.objectsArray = Collections[this.name].find({$and: [query, searchQuery]}, {sort: sortInstruction, limit: this.limit })
+  this.objectsArray          = Collections[this.name].find({$and: [query, newSearchQuery]}, {sort: {createdAt: -1}, limit: Number.parseInt(this.limit) })
+  this.objectsArrayUnlimited = Collections[this.name].find({$and: [query, newSearchQuery]})
+  this.objectsArrayUnfiltered = Collections[this.name].find({})
+
+
+  Session.set 'collection.' + this.name + '.visibleCount', this.objectsArray.count()
+  Session.set 'collection.' + this.name + '.filteredCount', this.objectsArrayUnlimited.count()
+  Session.set 'collection.' + this.name + '.totalCount', this.objectsArrayUnfiltered.count()
+
+  if this.objectsArray.count() == 0
+    this.empty = true
+  else
+    this.empty = false
 
   Session.get 'searchFilters'
   Session.get 'filters'
 
   # return Template.jCollection
-  console.log "collection"
+  console.log "collection: ", this.name
   console.log this
+  console.log this.objectsArray.collection._docs._map
+  console.log this.count
+
 
   new Template Template.jCollection.viewName, ->
     Session.get 'searchFilters'
@@ -208,35 +221,33 @@ UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, n
   Collections.initialize this.collection, 1
   currentDocument = Session.get("currentDocument."+this.collection)
   if currentDocument?
-    this.objectsArray = Collections[this.collection].find({"_id": currentDocument._id}) 
+    this.objectsArray = Collections[this.collection].find({"_id": currentDocument._id})
   new Template Template.jCollection.viewName, ->
     Session.get 'searchFilters'
     Session.get 'filters'
     return Template.jCollection.renderFunction.apply this, arguments
 
-UI.registerHelper "field", (options) ->
-  field = options.hash.name
+UI.registerHelper "field", (field, options) ->
   name = this.collection
-  # if @_id #i don't remeber what this is for..., but with the update @_id is no longer defined
   data = {}
   if this[field]
     data[field] = this[field]
   else if options.hash['random']
     data[field] = random(options.hash['random'],options.hash)
     Collections.delayedUpdate name, @_id,data
-  else if options.hash['pick'] 
+  else if options.hash['pick']
     data[field] = pick options.hash['pick']
     Collections.delayedUpdate name, @_id,data
   data[field]
 
-UI.registerHelper "count", (collection, field, value) -> #counts ocurrances in subcollection
-  if Collections[collection]
-    query = {}
-    query[field] = value 
-    # query['context._id'] = this._id
-    Collections[collection].find(query).count()
-  else
-    0
+# UI.registerHelper "count", (collection, field, value) -> #counts ocurrances in subcollection that match a certain criteria
+#   if Collections[collection]
+#     query = {}
+#     query[field] = value
+#     # query['context._id'] = this._id
+#     Collections[collection].find(query).count()
+#   else
+#     0
 
 UI.registerHelper "equal", (a,b) ->
   if a is b then true else false
@@ -250,4 +261,3 @@ UI.registerHelper "setAllBoolean", (collection, field, value) ->
   result = ' data-set-field-boolean=' + field
   result += ' data-set-collection=' + collection
   result += ' data-set-value=' + value
-

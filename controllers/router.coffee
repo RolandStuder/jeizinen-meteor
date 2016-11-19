@@ -5,12 +5,12 @@
 # Meteor.Router.beforeRouting = ->
 #   filesImported = Session.get "filesImported"
 #   unless filesImported?
-#     Collections.importDataFromFiles() 
+#     Collections.importDataFromFiles()
 #   Session.set "filesImported", true
 
 @path = {}
 
-  
+
 
 
 Router.route "/(.*)",
@@ -23,7 +23,7 @@ Router.route "/(.*)",
 
     Jeizinen.log "Navigation: showing template '#{path["page"]}' with layout '#{path["layout"]}'"
     Jeizinen.log "links pointing to '#{path.sections}' get the class active"
-    
+
     this.layout path["layout"]
     this.render path["page"]
     window.setTimeout (->
@@ -31,7 +31,7 @@ Router.route "/(.*)",
       # replaceImagePlaceholders()
       return
     ), 0 # for some reason, I does not work without a TimeOut, probably some concurrency issue.
-    
+
   waiton: ->
     Meteor.subscribe("importedCollections")
     this.next()
@@ -39,11 +39,11 @@ Router.route "/(.*)",
   after: ->
     hash = this.params.hash
     Meteor.defer ->
-      target = $("[name=\"#{hash}\"]")  
+      target = $("[name=\"#{hash}\"]")
       if typeof target.offset() != "undefined"
         $(document.body).scrollTop target.offset().top
       else
-        $(document.body).scrollTop 0        
+        $(document.body).scrollTop 0
 
 paramsToSession = ->
   for param in window.location.search.substring(1).split('&')
@@ -51,8 +51,8 @@ paramsToSession = ->
     Session.set param[0], param[1]
 
 
-parse = (path) -> 
-  path = path.split("/") 
+parse = (path) ->
+  path = path.split("/")
   if path.length >= 2
     layout = path[path.length-2]
     path.shift()
@@ -64,10 +64,10 @@ parse = (path) ->
   sections.pop()
   unless Template[page]?
     Jeizinen.log "#{page}: no such template"
-    page = "notFound"  
+    page = "notFound"
   unless Template[layout]?
     Jeizinen.log "#{layout}: no such layout"
-    layout = "jEmptyLayout" 
+    layout = "jEmptyLayout"
   page: page
   layout: layout
   sections: sections

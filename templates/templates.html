@@ -29,9 +29,13 @@
 </template>
 
 <template name="jCollection">
-	{{#each this.objectsArray}}
-		{{> UI.contentBlock this}}
-	{{/each}}
+	{{#unless this.empty}}
+		{{#each this.objectsArray}}
+			{{> UI.contentBlock this}}
+		{{/each}}
+	{{else}}
+		{{> Template.elseBlock}}
+	{{/unless}}
 </template>
 
 <template name="jRepeat">
