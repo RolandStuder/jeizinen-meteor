@@ -9,6 +9,60 @@
 
 # importing datasets from files
 
+# options object of collection, limit, sort, create (int)
+Collections.find = (options) ->
+  Collections.initialize options.collection, options.create
+  options.limit = 100 unless typeof options.limit != "undefined"
+  options.limit = Number.parseInt(options.limit)
+  sortInstruction = {}
+  sortInstruction[options.sort] = 1
+  filters = Session.get("filters")
+  searchFilters = Session.get("searchFilters")
+  if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
+    query = filters[options.collection]
+  else
+    query = {}
+
+
+  if typeof searchFilters != "undefined"
+    searchQuery = searchFilters[options.collection]
+    queryArray = []
+    # for key,values of searchQuery
+    #   searchQuery[key] = new RegExp searchQuery[key], "gi"
+
+    for key,value of searchQuery
+      fields = key.split(",")
+      for field in fields
+        obj = {}
+        obj[field] = new RegExp value, "i"
+        queryArray.push obj
+  else
+    searchQuery = {}
+
+  newSearchQuery = {}
+  if typeof queryArray != "undefined"
+    if queryArray.length > 0
+      newSearchQuery['$or'] = queryArray
+    else
+      newSearchQuery = {}
+
+  this.objectsArray          = Collections[options.collection].find({$and: [query, newSearchQuery]}, {sort: {createdAt: -1}, limit: Number.parseInt(options.limit) })
+  this.objectsArrayUnlimited = Collections[options.collection].find({$and: [query, newSearchQuery]})
+  this.objectsArrayUnfiltered = Collections[options.collection].find({})
+
+  Session.set 'collection.' + options.collection + '.visibleCount', this.objectsArray.count()
+  Session.set 'collection.' + options.collection + '.filteredCount', this.objectsArrayUnlimited.count()
+  Session.set 'collection.' + options.collection + '.totalCount', this.objectsArrayUnfiltered.count()
+
+  if this.objectsArray.count() == 0
+    this.empty = true
+  else
+    this.empty = false
+
+  Session.get 'searchFilters'
+  Session.get 'filters'
+
+  return this.objectsArray
 
 Collections.create = (name) ->
   newCollection = {}
@@ -144,120 +198,3 @@ Collections.execObjectFunctions = (obj) ->
         value = eval("obj."+key+"()")
       returnObj[key] = value
   returnObj
-
-
-# HANDLEBARS HELPERS
-
-UI.registerHelper "collection", () ->
-  Collections.initialize this.name, this.create
-  this.limit = 100 unless typeof this.limit != "undefined"
-  this.limit = Number.parseInt(this.limit)
-  sortInstruction = {}
-  sortInstruction[this.sort] = 1
-  filters = Session.get("filters")
-  searchFilters = Session.get("searchFilters")
-  if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
-    query = filters[this.name]
-  else
-    query = {}
-
-
-  if typeof searchFilters != "undefined"
-    searchQuery = searchFilters[this.name]
-    queryArray = []
-    # for key,values of searchQuery
-    #   searchQuery[key] = new RegExp searchQuery[key], "gi"
-
-    for key,value of searchQuery
-      fields = key.split(",")
-      for field in fields
-        obj = {}
-        obj[field] = new RegExp value, "i"
-        queryArray.push obj
-        console.log obj
-  else
-    searchQuery = {}
-
-  newSearchQuery = {}
-  if typeof queryArray != "undefined"
-    if queryArray.length > 0
-      newSearchQuery['$or'] = queryArray
-      console.log JSON.stringify newSearchQuery
-      console.log JSON.stringify query
-    else
-      newSearchQuery = {}
-
-  this.objectsArray          = Collections[this.name].find({$and: [query, newSearchQuery]}, {sort: {createdAt: -1}, limit: Number.parseInt(this.limit) })
-  this.objectsArrayUnlimited = Collections[this.name].find({$and: [query, newSearchQuery]})
-  this.objectsArrayUnfiltered = Collections[this.name].find({})
-
-
-  Session.set 'collection.' + this.name + '.visibleCount', this.objectsArray.count()
-  Session.set 'collection.' + this.name + '.filteredCount', this.objectsArrayUnlimited.count()
-  Session.set 'collection.' + this.name + '.totalCount', this.objectsArrayUnfiltered.count()
-
-  if this.objectsArray.count() == 0
-    this.empty = true
-  else
-    this.empty = false
-
-  Session.get 'searchFilters'
-  Session.get 'filters'
-
-  # return Template.jCollection
-  console.log "collection: ", this.name
-  console.log this
-  console.log this.objectsArray.collection._docs._map
-  console.log this.count
-
-
-  new Template Template.jCollection.viewName, ->
-    Session.get 'searchFilters'
-    Session.get 'filters'
-    return Template.jCollection.renderFunction.apply this, arguments
-
-
-UI.registerHelper "document", () -> #BUG: does not rerender on documentChange, needs the same mechanism, as the collection helper
-  Collections.initialize this.collection, 1
-  currentDocument = Session.get("currentDocument."+this.collection)
-  if currentDocument?
-    this.objectsArray = Collections[this.collection].find({"_id": currentDocument._id})
-  new Template Template.jCollection.viewName, ->
-    Session.get 'searchFilters'
-    Session.get 'filters'
-    return Template.jCollection.renderFunction.apply this, arguments
-
-UI.registerHelper "field", (field, options) ->
-  name = this.collection
-  data = {}
-  if this[field]
-    data[field] = this[field]
-  else if options.hash['random']
-    data[field] = random(options.hash['random'],options.hash)
-    Collections.delayedUpdate name, @_id,data
-  else if options.hash['pick']
-    data[field] = pick options.hash['pick']
-    Collections.delayedUpdate name, @_id,data
-  data[field]
-
-# UI.registerHelper "count", (collection, field, value) -> #counts ocurrances in subcollection that match a certain criteria
-#   if Collections[collection]
-#     query = {}
-#     query[field] = value
-#     # query['context._id'] = this._id
-#     Collections[collection].find(query).count()
-#   else
-#     0
-
-UI.registerHelper "equal", (a,b) ->
-  if a is b then true else false
-
-UI.registerHelper "setAll", (collection, field, value) ->
-  result = ' data-set-field=' + field
-  result += ' data-set-collection=' + collection
-  result += ' data-set-value=' + value
-
-UI.registerHelper "setAllBoolean", (collection, field, value) ->
-  result = ' data-set-field-boolean=' + field
-  result += ' data-set-collection=' + collection
-  result += ' data-set-value=' + value

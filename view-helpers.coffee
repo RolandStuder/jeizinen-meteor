@@ -1,9 +1,5 @@
-UI.registerHelper "repeat", (options) ->
-  this.array = []
-  this.array.push "" for [1..this.times]
-  if this.with
-    this.array = this.with.split(",")
-  return Template.jRepeat
+UI.registerHelper "faker", () ->
+  "hello"
 
 UI.registerHelper "filter", (options) ->
   attributes  =
@@ -16,7 +12,7 @@ UI.registerHelper "liveSearch", (options) ->
   attributes =
     "data-live-search-for": options.hash["collection"]
     "data-live-search-field": options.hash["field"]
-  return attributes    
+  return attributes
 
 UI.registerHelper "animate", (animation) ->
   return "style=\"#{animation}\""
@@ -26,6 +22,11 @@ UI.registerHelper "session", (input, defaultValue) ->
     return Session.get input
   else
     return defaultValue
+
+UI.registerHelper "simpleFormat", (text) ->
+  text = text.replace /\n/g, "<br />";
+  return new Spacebars.SafeString text
+
 
   # inputArray = input.split(".") #I don't remember or see, why I did this.
   # if inputArray.length > 1
@@ -57,7 +58,7 @@ UI.registerHelper "bootstrapInput", (fieldName, options) ->
 
   if options.hash["labelWidth"]
     ctx.labelWidth = options.hash["labelWidth"]
-  else 
+  else
     ctx.labelWidth = 3
   ctx.inputWidth = 12-ctx.labelWidth
   return new Spacebars.SafeString toHTMLWithData Template.bootstrapInput, ctx
@@ -81,7 +82,7 @@ UI.registerHelper "bootstrapSelect", (fieldName, options) ->
 
   if options.hash["labelWidth"]
     ctx.labelWidth = options.hash["labelWidth"]
-  else 
+  else
     ctx.labelWidth = 3
   ctx.inputWidth = 12-ctx.labelWidth
   console.log ctx

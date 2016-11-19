@@ -8,5 +8,7 @@ Meteor.methods({
 	}
 });
 
-Meteor.startup(function() {("Jeizinen UI Prototyper started started!")
+Meteor.startup(
+	function() {
+		console.log("Jeizinen UI Prototyper started started!");
 });

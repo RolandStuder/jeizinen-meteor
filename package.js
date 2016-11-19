@@ -9,7 +9,8 @@ Package.on_use(function (api, where) {
 
     Npm.depends({
         yamljs: "0.1.5",
-        csvtojson: "0.3.8"
+        csvtojson: "0.3.8",
+        faker: '3.0.0'
     });
 
     both   = ['client', 'server'];
@@ -45,10 +46,13 @@ Package.on_use(function (api, where) {
             'controllers/router.coffee',
             'controllers/collections.coffee',
             'lib/random.coffee',
+            'helpers/collection-helpers.coffee',
             'templates/templates.html',
             'templates/bootstrap.html'
         ], client);
-    api.add_files(['controllers/dataImport.coffee'],both)
+    api.add_files([
+            'controllers/dataImport.coffee',
+        ],both)
 
     api.add_files(['flash-messages.js','flash-messages.html'], ['client'])
 
@@ -60,5 +64,5 @@ Package.on_use(function (api, where) {
     api.export('populateEditForms');
     api.export('Template');
     api.export('Session');
-
+    api.export('faker');
 });

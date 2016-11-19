@@ -87,6 +87,7 @@ Meteor.startup ->
 
         "change input[type=checkbox]": (event,data) ->
             value = event.currentTarget.checked
+            console.log event
             autoPickUpdateType(event, data, value)
 
         "change select": (event,data) ->
@@ -137,12 +138,12 @@ Meteor.startup ->
     autoPickUpdateType = (event, data, value) ->
         element = event.currentTarget
         form = $(element).closest("form")[0]
-        name = element.id or element.name
+        name = element.name
+        formName = $(form).attr('name')
         if isAutoupdate(event)
             if data
                 Collections.updateField(data, name, value)
-            else if form and (form.id or form.name )
-                formName = form.id or form.name
+            else if form and (formName)
                 Session.set formName + "." + name, value
             else
                 Session.set name, value
