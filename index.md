@@ -119,7 +119,24 @@ You can set a session variable with an input tag:
 The input is automatically saved to a session variable. No need to submit it. Set the value to `{{userName}` if you want to keep the valut in the input field across page changes. See more possibilites in [autosaving](#autosaving)
 
 
-## Importing data with CSV or YAML
+### Collections & Documents
+
+You can create collections directly in a template with the repeat helper
+
+	{{#repeat collection="contacts" create="100"}}
+		{{field "name" random="name"}}
+	{{/repeat}}
+
+Crazy I know, but we are prototyping here ;-)
+
+Same works with the document helper
+
+	{{#document collection="contacts" create="100"}}
+		{{field "name" random="name"}}
+	{{/document}}
+
+
+### Importing data with CSV or YAML
 
 Any CSV- or YAML-file you put in the directory `public/data` will be read and put into a collection. You need to create a separate file for every collection you want to use in your prototype. If you put a file like `people.csv` in that folder, you will be able to use its data within a collection or document-helper. For example: `#{{collection name="people"}}`. Any data of any column can now be used within that wrapper (do not use spaces or special characters in the columns names though).
 
@@ -152,19 +169,37 @@ By putting a `form` in a document or collection wrapper, you can update the mode
 
 Notice the `no-auto-update`, if it is not set autosave without the need to submit.
 
+### actions to change data
 
-## Autosaving
+You can change data by using view-helpers that will attach click events. They will
+update session or documentant variables.
+
+	// Set a textfield:
+	<button {{actionSet "someField" "Hello"}}>Say hello</button>
+
+	// Set a boolean field
+	<button {{actionSetBoolean "someField" true}}>On</button>
+	<button {{actionSetBoolean "someField" false}}>Off</button>
+
+	// Toggle a boolean field (needs to be in quotes)
+	<button {{actionSetBoolean "someField" "toggle"}}>Toggle</button>
+
+	// Increment a number (can be negative)
+	<button {{actionIncrement "votes" 1}}>+1</button>
+
+
+### Changing data with forms
 
 Form data is always automatically saved. It does not persist across reloads. If the form is enclosed by a {{#repeat}} helper with a collection or a document, form data is saved to the corresponding document.
 
-### Textinputs
+#### Session data with Textinputs
 
 	<input type="text" name="phoneNumber">
 	<p>{{session "phoneNumber"}}</p>
 
 Any input entered into an input field, will be saved to a session variable with name that is the same as the id or the name of the input (id has priority). This works for
 
-### Selects
+#### Selects
 
 	<select class="browser-default" name="selectValue">
 		<option value="" disabled selected>Choose your option</option>
@@ -174,7 +209,7 @@ Any input entered into an input field, will be saved to a session variable with 
 	</select>
 	{{session "selectValue"}}
 
-### Textareas
+#### Textareas
 
 	<textarea type="text" name="comment">{{session "comment"}}</textarea>
 	<p>{{simpleFormat (session "comment")}}</p>
@@ -185,13 +220,13 @@ Any input entered into an input field, will be saved to a session variable with 
 		{{ session "comment"}}
 	{{/markdown}}
 
-### Checkboxes
+#### Checkboxes
 
 	<input type="checkbox" id="happy" name="happy" />
 	<label for="happy">Happy</label>
 	{{session "happy"}}
 
-### Forms with namespacing
+#### Forms with namespacing
 
 	<form name="contact">
 		Name <input type="text" name="name">
@@ -273,7 +308,7 @@ create=`integer`
 : `create` pass an integer to create as many empty documents for this collection. example: `create=100`
 
 sort=`"fieldName"`
-:`sort` takes a fieldName by which the collection will be sorted. Example: `sort="name"`
+:`sort` takes a fieldName by which the collection will be sorted. Example: `sort="name"`. WARNING: if you combine sorting and content generation by {{field ...}} in a view it may lead to whacky behavior, data is created and sorted at the same time.
 
 limit=`integer`
 :`limit` will limit the displayed number of documents. Example: `limit=10`
@@ -365,7 +400,7 @@ When you click on this link, it will show:
 
 #### hyphenate
 
-	{{hypenate "some string"}}
+	{{hyphenate "some string"}}
 
 returns some-string, helpful for turning strings form model in to css classes
 
