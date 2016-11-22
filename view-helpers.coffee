@@ -1,3 +1,40 @@
+UI.registerHelper "action", () ->
+  "Action is a reserved word for helpers"
+
+# ALL ACTIONS SHOULD BE NAMESPACED SO THERE ARE NO CONFLICTS
+
+UI.registerHelper "actionSet", (field, value) ->
+  attr = {
+    field: field
+  , value: value
+  }
+  return nameSpaceObj("action-set", attr)
+
+UI.registerHelper "actionSetBoolean", (field, value) ->
+  value = "toggle" unless value? # defaults to toggle
+  value = true if (value == "true" || value == "TRUE")
+  value = false if (value == "false" || value == "FALSE")
+  attr = {
+    field: field
+  , value: value
+  }
+  return nameSpaceObj("action-set-boolean", attr)
+
+UI.registerHelper "actionIncrement", (field, delta) ->
+  attr = {
+    field: field
+  , delta: delta
+  }
+  return nameSpaceObj("action-increment", attr)
+
+
+@nameSpaceObj = (namespace, obj) -> #takes an action name an namesspaces the attribute
+  nameSpacedObj = {}
+  nameSpacedObj[namespace] = true
+  for key, value of obj
+    nameSpacedObj[namespace + "-" + key] = value
+  return nameSpacedObj
+
 UI.registerHelper "faker", () ->
   "hello"
 

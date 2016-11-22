@@ -7,11 +7,11 @@ if Meteor.isClient
         if _.isObject(item)
           _id = collection._makeNewID()
           item.collection = collectionName
-		          
+
           # insert with reactivity only on the last item
           if _.last(documents) is item
             _id = collection.insert(item)
-          
+
           # insert without reactivity
           else
             item._id = _id
@@ -23,7 +23,7 @@ if Meteor.isClient
     Collections.create collection.collection
     insertBulk Collections[collection.collection], collection.data, collection.collection
     console.log "IMPORT: imported #{collection.data.length} items from #{collection.source}"
-	
+
   handle = importedCollections.find({})
   handle.observe
     added: (collection) ->

@@ -9,6 +9,45 @@ Meteor.startup ->
                 return
             ), 1000
 
+        "click [action-set]": (event, data) ->
+          field = $(event.currentTarget).attr('action-set-field')
+          value = $(event.currentTarget).attr('action-set-value')
+          if data?
+            if data.collection?
+              Collections.updateField data, field, value
+          else
+            Session.set(field, value)
+
+        "click [action-set-boolean]": (event, data) ->
+          field = $(event.currentTarget).attr('action-set-boolean-field')
+          value = $(event.currentTarget).attr('action-set-boolean-value')
+          value = true if value == "true"
+          value = false if value == "false"
+          if data?
+            if data.collection?
+              if value == "toggle"
+                currentValue = Collections[data.collection].findOne({_id: data._id})[field] || false
+                value = !currentValue
+              Collections.updateField data, field, value
+          else
+            if value == "toggle"
+              currentValue = Session.get(field) || false
+              value = !currentValue
+            Session.set(field, value)
+
+        "click [action-increment]": (event, data) ->
+          field = $(event.currentTarget).attr('action-increment-field')
+          delta = $(event.currentTarget).attr('action-increment-delta')
+          if data?
+            if data.collection?
+              Collections.increaseField(data, field, delta)
+          else
+            currentValue = Session.get field
+            currentValue = 0 unless currentValue
+            value = Number.parseInt(currentValue) + Number.parseInt(delta)
+            Session.set(field, value)
+
+
         "click a": (event,data) ->
             if data?
                 if data.collection?

@@ -12,6 +12,8 @@ Session.set('_index','0');
 
 # options object of collection, limit, sort, create (int)
 Collections.find = (options) ->
+  options.create = 0 unless options.create
+  console.log options.create, "create"
   Collections.initialize options.collection, options.create
   options.limit = 100 unless typeof options.limit != "undefined"
   options.limit = Number.parseInt(options.limit)
@@ -47,7 +49,7 @@ Collections.find = (options) ->
     else
       newSearchQuery = {}
 
-  this.objectsArray          = Collections[options.collection].find({$and: [query, newSearchQuery]}, {sort: {createdAt: -1}, limit: Number.parseInt(options.limit) })
+  this.objectsArray          = Collections[options.collection].find({$and: [query, newSearchQuery]}, {sort: sortInstruction, limit: Number.parseInt(options.limit) })
   this.objectsArrayUnlimited = Collections[options.collection].find({$and: [query, newSearchQuery]})
   this.objectsArrayUnfiltered = Collections[options.collection].find({})
 
@@ -106,8 +108,7 @@ Collections.createDoc = (form) -> # creates a doc from submitted jquery form
   collection = Collections[name]
   inputs.each () ->
     data[ $(this).attr("name") ] = $(this).val()
-  newDocument = Collections.insert name, data
-  console.log name,data
+  newDocument = Collections.insert name, data, 1 # needs amount 1 because Collections.insert defaults to 0
 
 
 Collections.updateDoc = (document,form) -> #question: why does this not work anymore, when I assign a return value?
@@ -120,6 +121,13 @@ Collections.updateField = (document, field, value) ->
     data = {}
     data[field] = value
     Collections[document.collection].update document._id, $set: data;
+
+Collections.increaseField = (document, field, delta) ->
+  if Collections[document.collection].findOne(document._id)
+    data = {}
+    data[field] = Number.parseInt(delta)
+    Collections[document.collection].update document._id, $inc: data;
+
 
 Collections.getDocument = (collectionName) ->
   currentDocument = Session.get('currentDocument.'+collectionName)
