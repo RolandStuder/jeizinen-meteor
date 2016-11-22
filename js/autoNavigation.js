@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	// $('pre').add('code').addClass('prettyprint')
+	$('pre').add('code').addClass('prettyprint')
 
 	var path = $(location).attr('pathname');
 	if (path=="/jeizinen-meteor/" || (path.indexOf('index') >= 0 )) {
@@ -12,7 +12,7 @@ $(document).ready(function() {
 	//       offset: {
 	//         top: $('.header').height()
 	//       }
-	// }); 
+	// });
 	// $('body').scrollspy({ target: '#tableOfContents' })
 
 
@@ -30,7 +30,7 @@ $(document).ready(function() {
 		el = $(this);
 		title = el.text();
 		link = "#" + el.attr("id");
-	 
+
 		var prevLevel = level || 0;
 		level = this.nodeName.substr(1);
 		if(!baseLevel) { // make sure you start with highest level of heading or it won't work
@@ -61,4 +61,3 @@ $(document).ready(function() {
 	$("#tableOfContents").append(ToC);
 
 });
-

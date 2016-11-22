@@ -5,7 +5,7 @@ title: Docs
 
 {%raw %}
 
-#Jeizinen UI Prototyper
+# Jeizinen UI Prototyper
 
 A javascript prototyping framework to quickly create  highly interactive UI prototypes for webapplications.
 
@@ -104,7 +104,7 @@ When going to /documents.someTemplate `someTemplate` will be rendered and links 
 
 ## Data
 
-It has an underlying Data layer, that allow to use realistic data. There are two basic concepts:
+It has an underlying Data layer, that allows use of realistic data. There are two basic concepts:
 
 * Collections are basically Datasets you can iterate over
 * Session Variables hold key value pairs
@@ -295,9 +295,9 @@ Will return one of the comma-separated options.
 ### Collections
 
     {{#repeat collection='people' create=100 sort='name' limit='10'}}
-        block
-				{{else}}
-				show else blockthis if collection is empty because of filters or other reasons
+      block
+			{{else}}
+			show else blockthis if collection is empty because of filters or other reasons
     {{/repeat}}
 
 The `repeat` block helper allows use of realistic data in your views. The block within the collection is repeated for all `documents` in you dataset. Datasets are created by importing data via CSV or YAML files or you can create documents directly with the repeat helper.
@@ -396,6 +396,7 @@ When you click on this link, it will show:
 -->
 <!-- If you a picture does not fit your need, alt-click on it, it will be replaced by the next one.
  -->
+
 ## Some utilities
 
 #### hyphenate

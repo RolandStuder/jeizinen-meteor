@@ -80,6 +80,14 @@ a h2 {
 	color: black;
 }
 
+h3{
+	margin-top: 2em;
+}
+
+h4 {
+	margin-top: 1em;
+}
+
 
 a.anchor-link {
 	color: inherit;
@@ -93,7 +101,7 @@ nav ul.affix-top {
 }
 
 nav ul.affix {
-    position: fixed; 
+    position: fixed;
     top: 10px;
 }
 nav ul.affix-bottom {
@@ -103,7 +111,7 @@ nav ul.affix-bottom {
 @media (max-width: 768px) {
 	nav ul.affix {display: none;}
 }
-	
+
 
 #tableOfContents ul li a {
 	padding: 3px;
