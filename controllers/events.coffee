@@ -18,6 +18,17 @@ Meteor.startup ->
           else
             Session.set(field, value)
 
+        "click [update]": (event, data) ->
+          action = $(event.currentTarget).attr('update')
+          field = action.split(':')[0]
+          value = action.split(':')[1]
+          if data?
+            if data.collection?
+              Collections.updateField data, field, value
+          else
+            Session.set(field, value)
+
+
         "click [action-set-boolean]": (event, data) ->
           field = $(event.currentTarget).attr('action-set-boolean-field')
           value = $(event.currentTarget).attr('action-set-boolean-value')
@@ -35,9 +46,11 @@ Meteor.startup ->
               value = !currentValue
             Session.set(field, value)
 
-        "click [action-increment]": (event, data) ->
-          field = $(event.currentTarget).attr('action-increment-field')
-          delta = $(event.currentTarget).attr('action-increment-delta')
+        "click [increment]": (event, data) -> # increment="field,increment"
+          action = $(event.currentTarget).attr('increment')
+          actionParts = action.split(',')
+          field = actionParts[0]
+          delta = actionParts[1]
           if data?
             if data.collection?
               Collections.increaseField(data, field, delta)
@@ -46,6 +59,16 @@ Meteor.startup ->
             currentValue = 0 unless currentValue
             value = Number.parseInt(currentValue) + Number.parseInt(delta)
             Session.set(field, value)
+
+        "click [increment-session]": (event,data) ->
+          action = $(event.currentTarget).attr('increment-session')
+          actionParts = action.split(',')
+          field = actionParts[0]
+          delta = actionParts[1]
+          currentValue = Session.get field
+          currentValue = 0 unless currentValue
+          value = Number.parseInt(currentValue) + Number.parseInt(delta)
+          Session.set(field, value)
 
 
         "click a": (event,data) ->
@@ -58,25 +81,49 @@ Meteor.startup ->
         "submit form": (event,data) ->
             event.preventDefault()
             form = $(event.currentTarget).closest("form")
-            if data?
-                if data.collection?
-                    Session.set('currentDocument.'+data.collection ,data)
-                if data._id
-                    Collections.updateDoc data, form
-            else
+            target_collection = $(event.currentTarget).attr('data-collection')
+            if target_collection
                 Collections.createDoc form
                 form[0].reset()
+            else
+              if data?
+                  if data.collection?
+                      Session.set('currentDocument.'+data.collection ,data)
+                  if data._id
+                      Collections.updateDoc data, form
+              else
+                  Collections.createDoc form
+                  form[0].reset()
             if form.attr('href')?
               Session.set("currentPage",form.attr('href'))
             return true
 
-        "click [data-toggle-boolean]": (event,data) ->
-            field = $(event.currentTarget).attr('data-toggle-boolean')
+        "click [toggle-boolean]": (event,data) ->
+            field = $(event.currentTarget).attr('toggle-boolean')
+            console.log data
             if data?
                 if data._id?
                     Collections.toggleBoolean data, field
             else
                 Session.toggle field
+
+        "click [set-true]": (event,data) ->
+            action = $(event.currentTarget).attr('set-true')
+            actionParts = action.split(',')
+            field = actionParts[0]
+            if data?
+                if data._id?
+                    Collections.updateField data, field, true
+
+        "click [set-false]": (event,data) ->
+            action = $(event.currentTarget).attr('set-false')
+            actionParts = action.split(',')
+            field = actionParts[0]
+            if data?
+                if data._id?
+                    Collections.updateField data, field, false
+
+
 
         "click [href]": (event,data) ->
             href = $(event.currentTarget).attr('href')

@@ -3,3 +3,6 @@ UI.registerHelper "hyphenate", (text) ->
 
 UI.registerHelper "modulo", (number, divider) ->
   number % divider
+
+UI.registerHelper "truncate", (text, chars) ->
+  text.substring(0,chars) + "…"

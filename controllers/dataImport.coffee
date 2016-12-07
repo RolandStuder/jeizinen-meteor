@@ -28,7 +28,6 @@ if Meteor.isClient
   handle.observe
     added: (collection) ->
       createCollectionFromImport(collection)
-      console.log "import now"
 
 if Meteor.isServer
 	Fibers = Npm.require('fibers');

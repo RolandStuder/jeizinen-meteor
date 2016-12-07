@@ -13,19 +13,26 @@ Session.set('_index','0');
 # options object of collection, limit, sort, create (int)
 Collections.find = (options) ->
   options.create = 0 unless options.create
-  console.log options.create, "create"
   Collections.initialize options.collection, options.create
   options.limit = 100 unless typeof options.limit != "undefined"
   options.limit = Number.parseInt(options.limit)
   sortInstruction = {}
   sortInstruction[options.sort] = 1
+  unless options.sort
+    sortInstruction.createdAt = -1
+
   filters = Session.get("filters")
+
   searchFilters = Session.get("searchFilters")
   if typeof filters != "undefined" #ugly stuff, can't I do it more elegantly?
     query = filters[options.collection]
   else
     query = {}
 
+  if options.filter #filters repeat with query indicated by filter="key:value"
+    query = {}
+    options.filter = options.filter.split(':')
+    query[options.filter[0]] = options.filter[1]
 
   if typeof searchFilters != "undefined"
     searchQuery = searchFilters[options.collection]
@@ -102,12 +109,16 @@ Collections.initialize = (name,amount,context) ->
 
 Collections.createDoc = (form) -> # creates a doc from submitted jquery form
   inputs = form.find("input[name]")
+  textareas = form.find("textarea[name]")
   name = form.attr("data-collection")
   data = {collection: name}
   Collections.create name
   collection = Collections[name]
   inputs.each () ->
     data[ $(this).attr("name") ] = $(this).val()
+  textareas.each () ->
+    data[ $(this).attr("name") ] = $(this).val()
+    console.log "submitted data ",  $(this).val()
   newDocument = Collections.insert name, data, 1 # needs amount 1 because Collections.insert defaults to 0
 
 
@@ -123,10 +134,11 @@ Collections.updateField = (document, field, value) ->
     Collections[document.collection].update document._id, $set: data;
 
 Collections.increaseField = (document, field, delta) ->
-  if Collections[document.collection].findOne(document._id)
+  if doc = Collections[document.collection].findOne(document._id)
     data = {}
-    data[field] = Number.parseInt(delta)
-    Collections[document.collection].update document._id, $inc: data;
+    current = doc[field]
+    data[field] = Number.parseInt(current) + Number.parseInt(delta) || 0
+    Collections[document.collection].update document._id, $set: data;
 
 
 Collections.getDocument = (collectionName) ->

@@ -60,7 +60,7 @@ UI.registerHelper "session", (input, defaultValue) ->
   else
     return defaultValue
 
-UI.registerHelper "simpleFormat", (text) ->
+UI.registerHelper "simpleFormat", (text, options) ->
   text = text.replace /\n/g, "<br />";
   return new Spacebars.SafeString text
 
